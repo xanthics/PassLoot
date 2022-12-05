@@ -704,13 +704,17 @@ end
 function module:GetCurrentSpec()
   local Talents = {};
   local Name, PointsSpent
+  -- check if we even have talent tabs
+  if GetNumTalentTabs() == 0 then
+	return NONE, nil
+  end
   for Index = 1, GetNumTalentTabs() do
     Name, _, PointsSpent, _, _ = GetTalentTabInfo(Index);
     Talents[Index] = { Name, PointsSpent or 0 };
   end
   table.sort(Talents, function(a, b) return a[2] > b[2] end);
   local TalentMatchA, TalentMatchB;
-  if ( Talents[1][2] == 0 ) then
+  if ( Talents == nil or Talents[1][2] == 0) then
     TalentMatchA = NONE;
   elseif ( Talents[1][2]*3/4 <= Talents[2][2] ) then
     if ( Talents[1][2]*3/4 <= Talents[3][2] ) then
