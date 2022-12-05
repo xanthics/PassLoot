@@ -1,5 +1,3 @@
-Code -> download zip -> Extract to Passloot
+Code -> download zip -> Extract
 
-If extracted correctly this README should be in top level directory
-
-    Passloot\README.md
+Move the **Passloot** folder, that is in the same folder as this README, to your addons directory.
