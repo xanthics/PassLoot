@@ -171,7 +171,7 @@ function module.Widget:SetMatch(ItemLink, Tooltip)
       -- new line is usually a recipe.  We don't want to scan the item a recipe makes
       -- as that might be a mount (mechano-hog / chopper) that might be learned.
       -- Might be items other than recipes that are similar...
-      if ( string.find(Text, "^\n") ) then
+      if (Text == nil) or ( string.find(Text, "^\n") ) then
         break;
       elseif ( Text == ITEM_SPELL_KNOWN ) then
         module.CurrentMatch = 2;  -- module.Choices[2] = "Learned"
