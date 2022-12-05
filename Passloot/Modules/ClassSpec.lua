@@ -702,12 +702,14 @@ function module:GetClassSpecText(Class, Spec)
 end
 
 function module:GetCurrentSpec()
-  local Talents = {};
-  local Name, PointsSpent
   -- check if we even have talent tabs
   if GetNumTalentTabs() == 0 then
 	return NONE, nil
   end
+
+  local Talents = {};
+  local Name, PointsSpent
+
   for Index = 1, GetNumTalentTabs() do
     Name, _, PointsSpent, _, _ = GetTalentTabInfo(Index);
     Talents[Index] = { Name, PointsSpent or 0 };
