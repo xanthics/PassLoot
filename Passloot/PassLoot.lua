@@ -8,49 +8,9 @@ local function debug (msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg)
 end
 
-local function waitOnUpdate (self, elapse)
+local AceTimer = LibStub('AceTimer-3.0')
 
-	local count = #waitTable
-	local i = 1
-	while ( i <= count )
-	do
-		local waitRecord = tremove(waitTable,i)
-		local d = tremove(waitRecord,1)
-		local f = tremove(waitRecord,1)
-		local p = tremove(waitRecord,1)
-
-		if ( d > elapse ) then
-			tinsert(waitTable, i, {d-elapse, f, p})
-			i = i + 1
-		else
-			count = count - 1
-			f(unpack(p))
-		end
-	end
-
-	if ( #waitTable == 0 ) then
-		waitFrame:SetScript("onUpdate", nil)
-	end
-end
-
-local function wait(delay, func, ...)
-
-	if ( type(delay) ~= "number" or type(func) ~= "function" ) then
-		return false
-	end
-
-	if ( waitFrame == nil ) then
-		waitFrame = CreateFrame("Frame", "WaitFrame", UIParent)
-	end
-
-	waitFrame:SetScript("onUpdate", waitOnUpdate)
-
-	tinsert(waitTable, {delay, func, {...}})
-
-	return true
-end
-
-function delay_rollOnLoot(RollID, RollMethod)
+function AceTimer:delay_rollOnLoot(RollID, RollMethod)
 	RollOnLoot(RollID, RollMethod);
 end
 
@@ -363,7 +323,7 @@ function PassLoot:START_LOOT_ROLL(Event, RollID, ...)
       -- end
       self:SendMessage("PassLoot_OnRoll", ItemLink, RuleKey, RollID, RollMethod);  -- Maybe change this to OnRuleMatched
       if ( not self.TestLink and RollMethod ) then
-        wait(1, delay_rollOnLoot, RollID, RollMethod);
+        AceTimer:ScheduleTimer("delay_rollOnLoot", 1, RollID, RollMethod);
       end
       if ( self.db.profile.Quiet == false ) then
         -- Workaround for LibSink.  It can handle |c and |r color stuff, but not full ItemLinks
