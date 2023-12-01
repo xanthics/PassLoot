@@ -63,6 +63,17 @@ L["Will roll greed on all loot matching this rule."] = true
 L["Will roll need on all loot matching this rule."] = true
 
 local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "enUS", true);
+LM["Owned"] = true
+LM["Unowned"] = true
+LM["Selected rule will only match unlearned vanity items."] = true
+LM["Selected rule will only match learned vanity items."] = true
+LM["Vanity Unlock"] = true
+LM["Unlocked"] = true
+LM["Unknown"] = true
+LM["Unlocked but Unknown"] = true
+LM["Selected rule will only match unlearned Wardrobe items."] = true
+LM["Selected rule will only match learned Wardrobe items."] = true
+LM["Wardrobe Unlock"] = true
 LM["10 Man Raid"] = true
 LM["25 Man Raid"] = true
 LM["Accessories"] = true
@@ -158,4 +169,5 @@ LM["Zone Name_Desc"] = [=[Zone name to match selected rule to, leave empty to ma
 Shift-right-click to fill with current zone name]=]
 LM["Zone Type"] = true
 LM["%zonetype% - %instancedifficulty%"] = true
+
 
