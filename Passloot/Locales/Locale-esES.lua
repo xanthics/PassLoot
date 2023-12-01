@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "esES", false);
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "esES", false)
 if not L then return end
 L["Active Filters"] = "Filtros Activos"
 --[==[ L["Active Filters_Desc"] = [=[Select a filter to modify, or shift-right-click to remove this filter
@@ -62,7 +62,7 @@ L["Up"] = "Arriba"
 -- L["Will roll greed on all loot matching this rule."] = "Will roll greed on all loot matching this rule."
 -- L["Will roll need on all loot matching this rule."] = "Will roll need on all loot matching this rule."
 
-local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "esES", false);
+local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "esES", false)
 -- LM["10 Man Raid"] = "10 Man Raid"
 -- LM["25 Man Raid"] = "25 Man Raid"
 -- LM["Accessories"] = "Accessories"
@@ -158,4 +158,3 @@ This includes items which have a unique stack higher than 1, such as battlegroun
 Shift-right-click to fill with current zone name]=] ]==]
 -- LM["Zone Type"] = "Zone Type"
 -- LM["%zonetype% - %instancedifficulty%"] = "%zonetype% - %instancedifficulty%"
-

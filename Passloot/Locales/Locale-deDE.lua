@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "deDE", false);
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "deDE", false)
 if not L then return end
 L["Active Filters"] = "Aktive Filter" -- Needs review
 L["Active Filters_Desc"] = "Wähle einen Filter aus, um ihn zu bearbeiten oder Schift-Rechtsklick, um ihn zu löschen"
@@ -60,7 +60,7 @@ L["Will pass on all loot matching this rule."] = "Will leitet alle Beute für di
 L["Will roll greed on all loot matching this rule."] = "Will Roll-Gier auf allen Beute für diese Regel." -- Needs review
 L["Will roll need on all loot matching this rule."] = "Es wird Bedarf auf jeden Gegenstand gewürfelt, der dieser Regel entspricht."
 
-local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "deDE", false);
+local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "deDE", false)
 LM["10 Man Raid"] = "10 Mann Schlachtzug"
 LM["25 Man Raid"] = "25 Mann Schlachtzug"
 LM["Accessories"] = "Zubehör" -- Needs review
@@ -156,4 +156,3 @@ LM["Zone Name"] = "Zonenname"
 Shift-right-click to fill with current zone name]=] ]==]
 LM["Zone Type"] = "Zonentyp"
 LM["%zonetype% - %instancedifficulty%"] = "%zonetype% - %instancedifficulty%"
-

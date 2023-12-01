@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "zhCN", false);
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "zhCN", false)
 if not L then return end
 -- L["Active Filters"] = "Active Filters"
 --[==[ L["Active Filters_Desc"] = [=[Select a filter to modify, or shift-right-click to remove this filter
@@ -62,7 +62,7 @@ L["Will pass on all loot matching this rule."] = "放弃所有符合本规则的
 L["Will roll greed on all loot matching this rule."] = "贪婪所有符合本规则的掉落"
 L["Will roll need on all loot matching this rule."] = "所有符合本规则的Loot都需求" -- Needs review
 
-local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "zhCN", false);
+local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "zhCN", false)
 -- LM["10 Man Raid"] = "10 Man Raid"
 -- LM["25 Man Raid"] = "25 Man Raid"
 LM["Accessories"] = "附件" -- Needs review
@@ -157,4 +157,3 @@ LM["Zone Name_Desc"] = [=[选定规则所匹配的区域，留空将匹配所有
 (只有按下回车后才会保存)]=] -- Needs review
 -- LM["Zone Type"] = "Zone Type"
 LM["%zonetype% - %instancedifficulty%"] = "%zonetype% - %instancedifficulty%" -- Needs review
-

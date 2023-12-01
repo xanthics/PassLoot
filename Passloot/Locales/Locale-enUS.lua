@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "enUS", true);
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "enUS", true)
 if not L then return end
 L["Active Filters"] = true
 L["Active Filters_Desc"] = [=[Select a filter to modify, or shift-right-click to remove this filter
@@ -62,7 +62,7 @@ L["Will pass on all loot matching this rule."] = true
 L["Will roll greed on all loot matching this rule."] = true
 L["Will roll need on all loot matching this rule."] = true
 
-local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "enUS", true);
+local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "enUS", true)
 LM["Owned"] = true
 LM["Unowned"] = true
 LM["Selected rule will only match unlearned vanity items."] = true
@@ -169,5 +169,3 @@ LM["Zone Name_Desc"] = [=[Zone name to match selected rule to, leave empty to ma
 Shift-right-click to fill with current zone name]=]
 LM["Zone Type"] = true
 LM["%zonetype% - %instancedifficulty%"] = true
-
-

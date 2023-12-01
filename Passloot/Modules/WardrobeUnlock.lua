@@ -4,16 +4,16 @@ local module = PassLoot:NewModule(L["Wardrobe Unlock"])
 
 module.Choices = {{
 	["Name"] = L["Any"],
-	["Value"] = 1
+	["Value"] = 1,
 }, {
 	["Name"] = L["Unlocked"],
-	["Value"] = 2
+	["Value"] = 2,
 }, {
 	["Name"] = L["Unknown"],
-	["Value"] = 3
+	["Value"] = 3,
 }, {
 	["Name"] = L["Unlocked but Unknown"],
-	["Value"] = 4
+	["Value"] = 4,
 }}
 
 module.ConfigOptions_RuleDefaults = { -- { VariableName, Default },
@@ -34,9 +34,7 @@ function module:OnDisable()
 	self:RemoveWidgets()
 end
 
-function module:UpgradeDatabase(FromVersion, Rule)
-	return
-end
+function module:UpgradeDatabase(FromVersion, Rule) return end
 
 function module:CreateWidget()
 	local Widget = CreateFrame("Frame", "PassLoot_Frames_Widgets_Wardrobe", nil, "UIDropDownMenuTemplate")
@@ -48,19 +46,11 @@ function module:CreateWidget()
 	else
 		UIDropDownMenu_SetWidth(Widget, 120)
 	end
-	Widget:SetScript("OnEnter", function()
-		self:ShowTooltip(L["Wardrobe Unlock"], L["Selected rule will only match unlearned Wardrobe items."])
-	end)
-	Widget:SetScript("OnLeave", function()
-		GameTooltip:Hide()
-	end)
+	Widget:SetScript("OnEnter", function() self:ShowTooltip(L["Wardrobe Unlock"], L["Selected rule will only match unlearned Wardrobe items."]) end)
+	Widget:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	local Button = _G[Widget:GetName() .. "Button"]
-	Button:SetScript("OnEnter", function()
-		self:ShowTooltip(L["Wardrobe Unlock"], L["Selected rule will only match unlearned Wardrobe items."])
-	end)
-	Button:SetScript("OnLeave", function()
-		GameTooltip:Hide()
-	end)
+	Button:SetScript("OnEnter", function() self:ShowTooltip(L["Wardrobe Unlock"], L["Selected rule will only match unlearned Wardrobe items."]) end)
+	Button:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	local Title = Widget:CreateFontString(Widget:GetName() .. "Title", "BACKGROUND", "GameFontNormalSmall")
 	Title:SetParent(Widget)
 	Title:SetPoint("BOTTOMLEFT", Widget, "TOPLEFT", 20, 0)
@@ -68,13 +58,9 @@ function module:CreateWidget()
 	Widget:SetParent(nil)
 	Widget:Hide()
 	if (select(4, GetBuildInfo()) < 30000) then
-		Widget.initialize = function(...)
-			self:DropDown_Init(Widget, ...)
-		end
+		Widget.initialize = function(...) self:DropDown_Init(Widget, ...) end
 	else
-		Widget.initialize = function(...)
-			self:DropDown_Init(...)
-		end
+		Widget.initialize = function(...) self:DropDown_Init(...) end
 	end
 	Widget.YPaddingTop = Title:GetHeight()
 	Widget.Height = Widget:GetHeight() + Widget.YPaddingTop
@@ -101,9 +87,7 @@ function module.Widget:GetData(RuleNum)
 			Changed = true
 		end
 	end
-	if (Changed) then
-		module:SetConfigOption("Wardrobe", Data)
-	end
+	if (Changed) then module:SetConfigOption("Wardrobe", Data) end
 	return Data
 end
 
@@ -125,9 +109,7 @@ function module.Widget:RemoveFilter(Index)
 end
 
 function module.Widget:DisplayWidget(Index)
-	if (Index) then
-		module.FilterIndex = Index
-	end
+	if (Index) then module.FilterIndex = Index end
 	local Value = self:GetData()
 	if (select(4, GetBuildInfo()) < 30000) then
 		UIDropDownMenu_SetText(module:GetUsableText(Value[module.FilterIndex][1]), module.Widget)
@@ -184,9 +166,7 @@ end
 function module.Widget:GetMatch(RuleNum, Index)
 	local RuleValue = self:GetData(RuleNum)
 	if (RuleValue[Index][1] == 1 and module.CurrentMatch > 0) or -- rule is "any" and item contains a Wardrobe line
-	   (RuleValue[Index][1] > 1 and RuleValue[Index][1] == module.CurrentMatch) then
-		return true
-	end
+	(RuleValue[Index][1] > 1 and RuleValue[Index][1] == module.CurrentMatch) then return true end
 	return false
 end
 
@@ -195,13 +175,9 @@ function module:DropDown_Init(Frame, Level)
 	local info = {}
 	info.checked = false
 	if (select(4, GetBuildInfo()) < 30000) then
-		info.func = function(...)
-			self:DropDown_OnClick(this, ...)
-		end
+		info.func = function(...) self:DropDown_OnClick(this, ...) end
 	else
-		info.func = function(...)
-			self:DropDown_OnClick(...)
-		end
+		info.func = function(...) self:DropDown_OnClick(...) end
 	end
 	info.owner = Frame
 	for Key, Value in ipairs(self.Choices) do
@@ -223,11 +199,6 @@ function module:DropDown_OnClick(Frame)
 end
 
 function module:GetUsableText(ID)
-	for Key, Value in ipairs(self.Choices) do
-		if (Value.Value == ID) then
-			return Value.Name
-		end
-	end
+	for Key, Value in ipairs(self.Choices) do if (Value.Value == ID) then return Value.Name end end
 	return ""
 end
-

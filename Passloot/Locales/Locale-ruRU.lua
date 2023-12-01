@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "ruRU", false);
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "ruRU", false)
 if not L then return end
 L["Active Filters"] = "Активные фильтры" -- Needs review
 L["Active Filters_Desc"] = [=[Выберите фильтр для редактирования, или нажмите shift-правый-клик чтобы удалить его
@@ -62,7 +62,7 @@ L["Will pass on all loot matching this rule."] = "Отказаться от вс
 L["Will roll greed on all loot matching this rule."] = "Выбирать \\\"Не откажусь\\\" на всю добычу соответствующию этому правилу." -- Needs review
 L["Will roll need on all loot matching this rule."] = "Выбирать \\\"Нужно\\\" на всю добычу соответствующию этому правилу." -- Needs review
 
-local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "ruRU", false);
+local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "ruRU", false)
 LM["10 Man Raid"] = "Рейд 10"
 LM["25 Man Raid"] = "Рейд 25"
 LM["Accessories"] = "Аксессуары" -- Needs review
@@ -158,4 +158,3 @@ LM["Zone Name"] = "Название зоны" -- Needs review
 Shift-right-click to fill with current zone name]=] ]==]
 LM["Zone Type"] = "Тип зоны" -- Needs review
 -- LM["%zonetype% - %instancedifficulty%"] = "%zonetype% - %instancedifficulty%"
-
