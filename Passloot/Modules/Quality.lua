@@ -11,6 +11,7 @@ module.Choices = {
   ITEM_QUALITY_COLORS[4].hex..ITEM_QUALITY4_DESC.."|r", --Epic
   ITEM_QUALITY_COLORS[5].hex..ITEM_QUALITY5_DESC.."|r", --Legendary
   ITEM_QUALITY_COLORS[6].hex..ITEM_QUALITY6_DESC.."|r", --Artifact
+  ITEM_QUALITY_COLORS[7].hex..ITEM_QUALITY7_DESC.."|r", --Vanity
 };
 module.ConfigOptions_RuleDefaults = {
   -- { VariableName, Default },
