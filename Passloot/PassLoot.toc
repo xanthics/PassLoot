@@ -54,3 +54,4 @@ Modules\Inventory.lua
 Modules\PlayerName.lua
 Modules\VanityUnlock.lua
 Modules\WardrobeUnlock.lua
+Modules\MysticEnchant.lua
