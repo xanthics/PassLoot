@@ -12,7 +12,7 @@ module.Choices = {{
 	["Name"] = L["Unknown"],
 	["Value"] = 3,
 }, {
-	["Name"] = L["Unlocked but Unknown"],
+	["Name"] = L["Unlocked from Different Item"],
 	["Value"] = 4,
 }}
 
@@ -135,32 +135,23 @@ function module.Widget:SetException(RuleNum, Index, Value)
 end
 
 function module.Widget:SetMatch(ItemLink, Tooltip)
-	local Line, Text
+	local itemID = GetItemInfoFromHyperlink(ItemLink)
 	local Owned = 0 -- 0 means no Wardrobe line on tooltip
 	local _, _, _, _, _, _, sSubType = GetItemInfo(ItemLink)
 	if sSubType ~= "Thrown" then -- you can't get wardrobe unlocks from thrown weapons
-		for Index = 2, Tooltip:NumLines() do
-			-- print("checking line "..Index)
-			Line = _G[Tooltip:GetName() .. "TextLeft" .. Index]
-			if (Line) then
-				Text = Line:GetText()
-				if (Text and Text ~= "") then
-					if (Text == TRANSMOGRIFY_TOOLTIP_APPEARANCE_KNOWN) then
-						Owned = 2
-						break
-					elseif (Text == TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
-						Owned = 3
-						break
-					elseif (Text == TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
-						Owned = 4
-						break
-					end
-				end
+		if APPEARANCE_ITEM_INFO[itemID] then
+			local collectedID = APPEARANCE_ITEM_INFO[itemID]:GetCollectedID()
+			if collectedID == itemID then -- unlocked
+				Owned = 2
+			elseif collectedID then -- unlocked but from different item
+				Owned = 4
+			else -- unknown
+				Owned = 3
 			end
 		end
 	end
 	module.CurrentMatch = Owned
-	module:Debug("Wardrobe: " .. Owned .. " (" .. Text .. ")")
+	module:Debug("Wardrobe: " .. Owned .. " (" .. itemID .. ")")
 end
 
 function module.Widget:GetMatch(RuleNum, Index)

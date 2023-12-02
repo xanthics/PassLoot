@@ -132,27 +132,18 @@ function module.Widget:SetException(RuleNum, Index, Value)
 end
 
 function module.Widget:SetMatch(ItemLink, Tooltip)
-	local Line, Text
-	local Owned = 0 -- 0 means no vanity line on tooltip
+    local Owned = 0
+    local itemID = GetItemInfoFromHyperlink(ItemLink)
+    if VANITY_ITEMS[itemID] then
+        if C_VanityCollection.IsCollectionItemOwned(itemID) then
+            Owned = 2
+        else
+            Owned = 3
+        end
+    end
 
-	for Index = 2, Tooltip:NumLines() do
-		-- print("checking line "..Index)
-		Line = _G[Tooltip:GetName() .. "TextLeft" .. Index]
-		if (Line) then
-			Text = Line:GetText()
-			if (Text and Text ~= "") then
-				if (Text:find(VANITY_ALREADY_OWNED)) then
-					Owned = 2
-					break
-				elseif (Text:find(VANITY_NOT_OWNED)) then
-					Owned = 3
-					break
-				end
-			end
-		end
-	end
 	module.CurrentMatch = Owned
-	module:Debug("Vanity: " .. Owned .. " (" .. Text .. ")")
+	module:Debug("Vanity: " .. Owned .. " (" .. itemID .. ")")
 end
 
 function module.Widget:GetMatch(RuleNum, Index)
