@@ -6,10 +6,10 @@ module.Choices = {{
 	["Name"] = L["Any RE"],
 	["Value"] = 1,
 }, {
-	["Name"] = L["RE Known"],
+	["Name"] = L["Any RE Known"],
 	["Value"] = 2,
 }, {
-	["Name"] = L["RE Unknown"],
+	["Name"] = L["Any RE Unknown"],
 	["Value"] = 3,
 }, {
 	["Name"] = L["WRE Known"],
@@ -21,7 +21,7 @@ module.Choices = {{
 	["Name"] = L["Non-WRE Known"],
 	["Value"] = 6,
 }, {
-	["Name"] = L["Non-Wre Unknown"],
+	["Name"] = L["Non-WRE Unknown"],
 	["Value"] = 7,
 }}
 
