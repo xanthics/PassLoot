@@ -1,19 +1,12 @@
 ﻿## Interface: 30300
 ## Title: PassLoot
-## Author: Odlaw
-## Version: 4.0
+## Author: Odlaw, Modified for Ascension by Xan
+## Version: 4.3
 ## Notes: Auto roll greed, need, pass or manually roll on items.
 ## Notes-zhCN: 自动在指定的物品上采取贪婪，需求或者放弃的掷骰操作
 ## SavedVariables: PassLootDB
-## OptionalDeps: Ace3, LibBabble-Inventory-3.0, LibSink-2.0
-## X-Category: Miscellaneous
-## X-Website: http://www.wowace.com/projects/pass-loot/
-## X-WoWI-ID: 6124
+## OptionalDeps: Ace3, LibBabble-Inventory-3.0, LibSink-2.0, LibDataBroker-1.1
 #@no-lib-strip@
-## X-Curse-Packaged-Version: r109
-## X-Curse-Project-Name: PassLoot
-## X-Curse-Project-ID: pass-loot
-## X-Curse-Repository-ID: wow/pass-loot/mainline
 Libs\LibStub\LibStub.lua
 libs\AceTimer-3.0\AceTimer-3.0.xml
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
@@ -26,7 +19,9 @@ Libs\AceConsole-3.0\AceConsole-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\LibBabble-Inventory-3.0\lib.xml
+Libs\LibBabble-TalentTree-3.0\lib.xml
 Libs\LibSink-2.0\lib.xml
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 #@end-no-lib-strip@
 Locales.xml
 PassLoot.lua
@@ -37,6 +32,7 @@ Modules\ZoneName.lua
 Modules\ZoneType.lua
 Modules\Quality.lua
 Modules\Bind.lua
+Modules\CanIRoll.lua
 Modules\ConfirmBoP.lua
 Modules\ConfirmDE.lua
 Modules\Unique.lua
@@ -51,7 +47,10 @@ Modules\ItemPrice.lua
 Modules\LootWon.lua
 Modules\Usable.lua
 Modules\Inventory.lua
+Modules\ClassSpec.lua
 Modules\PlayerName.lua
+Modules\GuildGroup.lua
+Modules\Equipable.lua
 Modules\VanityUnlock.lua
 Modules\WardrobeUnlock.lua
 Modules\MysticEnchant.lua

@@ -1,0 +1,110 @@
+------------------------------------------------------------------------
+r135 | Odlaw | 2012-06-06 18:06:15 +0000 (Wed, 06 Jun 2012) | 1 line
+Changed paths:
+   M /trunk/PassLoot.toc
+
+Update libraries and localization
+------------------------------------------------------------------------
+r134 | Odlaw | 2012-06-06 15:35:47 +0000 (Wed, 06 Jun 2012) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/PassLoot.lua
+
+Add LDB to open menu and show last 10 looted items
+------------------------------------------------------------------------
+r133 | odlaw | 2012-02-20 14:09:43 +0000 (Mon, 20 Feb 2012) | 1 line
+Changed paths:
+   M /trunk
+
+Locale update - frFR - thanks Blia
+------------------------------------------------------------------------
+
+
+(Xan) Added changes from r109 from https://www.wowinterface.com/downloads/info6124-PassLoot.html#changelog
+
+- r131 -
+Add option to copy/export rules (right click on rule)
+Add ptBR and esMX locale files.
+
+- r131 -
+toc update
+
+- r130 -
+toc update
+
+- r129 -
+toc update
+
+- r128 -
+More localization updates. Thanks BMSSMB (zhTW) and Shadow11 (deDE)
+
+- r127 -
+repackage for updated localization
+
+- r126 -
+toc update
+
+- r125 -
+Fix Guild Group module.
+
+- r124 -
+Type / SubType: Add Trade Goods-Tackle Box, Trade Goods-Item Enchantment, Recipe-Inscription, Gem-Hydraulic, Gem-Cogwheel
+Type / SubType: Remove Trade Goods-Armor Enchantment, Trade Goods-Weapon Enchantment
+
+- r123 -
+Added Armor - Relic in Type / SubType
+
+- r122 -
+Equipable filter: added 2hd axes to dk and paladins
+
+- r121 -
+Hopefully fix Equipable module.
+
+- r120 -
+Fixed updating which rules get skipped if you remove unknown filters manually.
+
+- r119 -
+Added option to display unknown filter variables.
+Unknown filter variables show up as gray in the active filters list.
+Unknown filter variables can be removed by either the 'Clean Rules' in the options, or 'Remove' on each one in the active filter list. (Unknown filter variables will cause passloot to skip the rule if skip rules is enabled)
+Skip rules option now default to off
+Changed some text descriptions to be a bit more clear.
+
+- r118 -
+Added defaults for SkipRules and SkipRulesWarning
+Fix for Can I Roll module
+Added option for RegEx matches for Item Name filter (option in modules menu)
+Locale updates (zhTW - alpha2009)
+
+- r117 -
+Fixed error when it can't figure out what is being rolled on if it is told something is being rolled on.
+Modules changes: Will not save empty tables if they were not added to a rule.
+Options for skipping rules if a rule has a setting from a module that is disabled or obsolete.
+Option to clean disabled / obsolete module settings from rules in profile.
+Bug Fix: removes variables from default template when a module is disabled.
+deDE - Thanks CuDiLLA
+zhTW - Thanks alpha2009
+
+- r116 -
+toc update
+
+- r115 -
+Add equipable filter - Will match on class based armor and weapons.
+zhTW update - thanks alpha2009
+
+- r114 -
+Added GuildGroup module - Matches when the group has a percentage of guild mates.
+
+- r113 -
+Bug fix for ItemLevel module.
+
+- r112 -
+ItemLevel can now use formulas and allows the keyword 'current' for your currently equipped item level.
+
+- r111 -
+toc fix
+
+- r110 -
+Add options to change the loot rolling text.
+Added requested "Can I Roll" filter. (If you can roll need, you might want to look at it before rolling)
+Updated toc: ## X-Compatibile-With: 40000

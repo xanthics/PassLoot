@@ -1,17 +1,17 @@
 ﻿local PassLoot = LibStub("AceAddon-3.0"):GetAddon("PassLoot")
 local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot_Modules")
-local module = PassLoot:NewModule(L["Player Name"])
+local module = PassLoot:NewModule(L["Guild Group"])
 
 module.ConfigOptions_RuleDefaults = {
   -- { VariableName, Default },
   {
-    "PlayerName",
+    "GuildGroup",
     -- {
-      -- [1] = { Name, Exception }
+      -- [1] = { MinGuildyPercent, Exception }
     -- },
   },
 }
-module.NewFilterValue = L["Temp Name"]
+module.NewFilterValue = 60
 
 function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
@@ -27,10 +27,10 @@ end
 function module:UpgradeDatabase(FromVersion, Rule)
   if ( FromVersion == 1 ) then
     local Table = {
-      { "PlayerName", nil },
+      { "GuildGroup", nil },
     }
-    if ( type(Rule.PlayerName) == "table" ) then
-      if ( #Rule.PlayerName == 0 ) then
+    if ( type(Rule.GuildGroup) == "table" ) then
+      if ( #Rule.GuildGroup == 0 ) then
         return Table
       end
     end
@@ -39,9 +39,9 @@ function module:UpgradeDatabase(FromVersion, Rule)
 end
 
 function module:CreateWidget()
-  local Widget = CreateFrame("Frame")
+  local Widget = CreateFrame("Frame", "PassLoot_Frames_Widgets_GuildGroup")
   
-  local TextBox = CreateFrame("EditBox")
+  local TextBox = CreateFrame("EditBox", "PassLoot_Frames_Widgets_GuildGroupTextBox")
   TextBox:SetBackdrop({
     ["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
     ["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -59,11 +59,11 @@ function module:CreateWidget()
   TextBox:SetFontObject(ChatFontNormal)
   TextBox:SetTextInsets(6, 6, 6, 6)
   TextBox:SetHeight(26)
-  TextBox:SetWidth(160)
-  TextBox:SetMaxLetters(200)
+  TextBox:SetWidth(80)
+  TextBox:SetMaxLetters(5)
   -- TextBox:SetHistoryLines(0)
   TextBox:SetAutoFocus(false)
-  TextBox:SetScript("OnEnter", function() self:ShowTooltip(L["Player Name"], L["Selected rule will match on player names."]) end)
+  TextBox:SetScript("OnEnter", function() self:ShowTooltip(L["Guild Group"], L["Guild Group_Desc"]) end)
   TextBox:SetScript("OnLeave", function() GameTooltip:Hide() end)
   TextBox:SetScript("OnEscapePressed", function(Frame) Frame:ClearFocus() end)
   TextBox:SetScript("OnEditFocusGained", function(Frame) Frame:HighlightText() end)
@@ -72,27 +72,27 @@ function module:CreateWidget()
     self.Widget:DisplayWidget()
   end)
   TextBox:SetScript("OnEnterPressed", function(Frame)
-    self:SetPlayerName(Frame)
+    self:SetPercentGuildies(Frame)
     Frame:ClearFocus()
   end)
-  Widget.Title = TextBox:CreateFontString(nil, "BACKGROUND", "GameFontNormalSmall")
-  Widget.Title:SetParent(TextBox)
-  Widget.Title:SetPoint("BOTTOMLEFT", TextBox, "TOPLEFT", 3, 0)
-  Widget.Title:SetText(L["Player Name"])
+  local Title = TextBox:CreateFontString(TextBox:GetName().."Title", "BACKGROUND", "GameFontNormalSmall")
+  Title:SetParent(TextBox)
+  Title:SetPoint("BOTTOMLEFT", TextBox, "TOPLEFT", 3, 0)
+  Title:SetText(L["Guild Group"])
   TextBox:SetParent(Widget)
   TextBox:SetPoint("BOTTOMLEFT", Widget, "BOTTOMLEFT", 0, 0)
   Widget.TextBox = TextBox
   
   Widget:Hide()
   Widget:SetHeight(TextBox:GetHeight())
-  Widget.YPaddingTop = Widget.Title:GetHeight() + 1
+  Widget.YPaddingTop = Title:GetHeight() + 1
   Widget.YPaddingBottom = 4
   Widget.Height = Widget:GetHeight() + Widget.YPaddingTop + Widget.YPaddingBottom
   Widget:SetWidth(TextBox:GetWidth())
   Widget.PreferredPriority = 14
   Widget.Info = {
-    L["Player Name"],
-    L["Selected rule will match on player names."],
+    L["Guild Group"],
+    L["Guild Group_Desc"],
   }
   return Widget
 end
@@ -100,12 +100,12 @@ module.Widget = module:CreateWidget()
 
 -- Local function to get the data and make sure it's valid data
 function module.Widget:GetData(RuleNum)
-  local Data = module:GetConfigOption("PlayerName", RuleNum)
+  local Data = module:GetConfigOption("GuildGroup", RuleNum)
   local Changed = false
   if ( Data ) then
     if ( type(Data) == "table" and #Data > 0 ) then
       for Key, Value in ipairs(Data) do
-        if ( type(Value) ~= "table" or type(Value[1]) ~= "string" ) then
+        if ( type(Value) ~= "table" or type(Value[1]) ~= "number" ) then
           Data[Key] = {
             module.NewFilterValue,
             false
@@ -119,7 +119,7 @@ function module.Widget:GetData(RuleNum)
     end
   end
   if ( Changed ) then
-    module:SetConfigOption("PlayerName", Data)
+    module:SetConfigOption("GuildGroup", Data)
   end
   return Data or {}
 end
@@ -136,7 +136,7 @@ function module.Widget:AddNewFilter()
     false
   }
   table.insert(Value, NewTable)
-  module:SetConfigOption("PlayerName", Value)
+  module:SetConfigOption("GuildGroup", Value)
 end
 
 function module.Widget:RemoveFilter(Index)
@@ -145,7 +145,7 @@ function module.Widget:RemoveFilter(Index)
   if ( #Value == 0 ) then
     Value = nil
   end
-  module:SetConfigOption("PlayerName", Value)
+  module:SetConfigOption("GuildGroup", Value)
 end
 
 function module.Widget:DisplayWidget(Index)
@@ -157,7 +157,6 @@ function module.Widget:DisplayWidget(Index)
     return
   end
   module.Widget.TextBox:SetText(Value[module.FilterIndex][1])
-  module.Widget.TextBox:SetScript("OnUpdate", function(...) module:ScrollLeft(...) end)
 end
 
 function module.Widget:GetFilterText(Index)
@@ -173,26 +172,54 @@ end
 function module.Widget:SetException(RuleNum, Index, Value)
   local Data = self:GetData(RuleNum)
   Data[Index][2] = Value
-  module:SetConfigOption("PlayerName", Data)
+  module:SetConfigOption("GuildGroup", Data)
 end
 
 function module.Widget:SetMatch(ItemLink, Tooltip)
-  module.CurrentMatch = UnitName("player")
-  module:Debug("Player name: "..(module.CurrentMatch or ""))
+  local Group, NumGroup
+  if ( UnitInRaid("player") ) then
+    Group = "raid"
+    NumGroup = GetNumRaidMembers()
+  else
+    Group = "party"
+    NumGroup = GetNumPartyMembers()
+  end
+  if ( NumGroup > 0 ) then
+    local NumInMyGuild = 0
+    for Index = 1, NumGroup do
+      if ( UnitIsInMyGuild(Group..Index) ) then  -- If guildless, it's nil
+        NumInMyGuild = NumInMyGuild + 1
+      end
+    end
+    if ( Group == "party" ) then  -- Parties don't include myself, so add myself.
+      NumInMyGuild = NumInMyGuild + 1
+      NumGroup = NumGroup + 1
+    end
+    module.CurrentMatch = math.floor(NumInMyGuild / NumGroup * 100 + 0.5)
+  else
+    module.CurrentMatch = 100  -- We're solo.. maybe someone is doing a /passloot test
+  end
+  module:Debug(string.format("Guild Group: %s%%", module.CurrentMatch))
 end
 
 function module.Widget:GetMatch(RuleNum, Index)
-  local RuleValue = self:GetData(RuleNum)
-  local Name = RuleValue[Index][1]
-  if ( string.lower(module.CurrentMatch) ~= string.lower(Name) ) then
-    module:Debug("Player name doesn't match")
-    return false
+  local Value = self:GetData(RuleNum)
+  local NumGuildies = Value[Index][1]
+  if ( module.CurrentMatch >= NumGuildies ) then
+    return true
   end
-  return true
+  return false
 end
 
-function module:SetPlayerName(Frame)
+function module:SetPercentGuildies(Frame)
+  local Num = tonumber(Frame:GetText()) or 0
+  if ( Num < 0 ) then
+    Num = 0
+  end
+  if ( Num > 100 ) then
+    Num = 100
+  end
   local Value = self.Widget:GetData()
-  Value[self.FilterIndex][1] = Frame:GetText()
-  self:SetConfigOption("PlayerName", Value)
+  Value[self.FilterIndex][1] = Num
+  self:SetConfigOption("GuildGroup", Value)
 end

@@ -1,11 +1,11 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "esES", false)
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "esMX", false)
 if not L then return end
-L["Active Filters"] = "Filtros Activos"
+-- L["Active Filters"] = "Active Filters"
 --[==[ L["Active Filters_Desc"] = [=[Select a filter to modify, or shift-right-click to remove this filter
 (Each filter must have at least one match)]=] ]==]
 -- L["Add"] = "Add"
 -- L["Add a new rule."] = "Add a new rule."
-L["Add this filter."] = "Añadir este filtro."
+-- L["Add this filter."] = "Add this filter."
 -- L["Allow Multiple Confirm Popups"] = "Allow Multiple Confirm Popups"
 -- L["Available Filters"] = "Available Filters"
 --[==[ L["Available Filters_Desc"] = [=[Select a filter to use.
@@ -21,17 +21,17 @@ It is recommended that you activate all modules used in rules.
 --[==[ L["Click to select and edit this rule."] = [=[Click to select and edit this rule.
 Right click to copy or export this rule.]=] ]==]
 -- L["Create Copy"] = "Create Copy"
-L["Default"] = "Predeterminado"
-L["Description"] = "Descripción"
-L["Description_Desc"] = [=[Descripción de esta regla.
-(Se guarda cuando pulses Intro)]=]
+-- L["Default"] = "Default"
+-- L["Description"] = "Description"
+--[==[ L["Description_Desc"] = [=[Description of this rule.
+(Saves when you press enter)]=] ]==]
 -- L["Disenchant"] = "DE"
 -- L["Disenchant_Desc"] = "If an enchanter is present, will roll disenchant on all loot matching this rule."
 -- L["Display a warning when a rule is skipped."] = "Display a warning when a rule is skipped."
 -- L["Displays disabled or unknown filter variables."] = "Displays disabled or unknown filter variables."
 -- L["Down"] = "Down"
 -- L["Enabled"] = "Enabled"
-L["Enable / Disable this module."] = "Habilitar / Deshabilitar este módulo."
+-- L["Enable / Disable this module."] = "Enable / Disable this module."
 -- L["Enable Mod"] = "Enable Mod"
 -- L["Enable or disable this mod."] = "Enable or disable this mod."
 --[==[ L["Enter the text displayed when rolling."] = [=[Enter the text displayed when rolling.
@@ -48,30 +48,30 @@ Use '%rule%' for rule that was matched.
 -- L["Ignoring %item% (%rule%)"] = "Ignoring %item% (%rule%)"
 -- L["Menu"] = "Menu"
 -- L["Messages"] = "Messages"
-L["Module"] = "Módulo"
+-- L["Module"] = "Module"
 -- L["Modules"] = "Modules"
 -- L["Move selected rule down in priority."] = "Move selected rule down in priority."
 -- L["Move selected rule up in priority."] = "Move selected rule up in priority."
-L["Need"] = "Necesidad"
+-- L["Need"] = "Need"
 -- L["No rules matched."] = "No rules matched."
 -- L["Opens the PassLoot Menu."] = "Opens the PassLoot Menu."
 -- L["Options"] = "Options"
 -- L["Output"] = "Output"
-L["Pass"] = "Pasar"
+-- L["Pass"] = "Pass"
 -- L["PassLoot"] = "PassLoot"
 -- L["PASSLOOT_SLASH_COMMAND"] = "passloot"
 -- L["Profiles"] = "Profiles"
 -- L["Quiet"] = "Quiet"
-L["Remove"] = "Eliminar"
+-- L["Remove"] = "Remove"
 -- L["Removes disabled or unknown filters from current rules."] = "Removes disabled or unknown filters from current rules."
-L["Remove selected rule."] = "Eliminar la regla seleccionada."
+-- L["Remove selected rule."] = "Remove selected rule."
 -- L["Remove this filter."] = "Remove this filter."
 -- L["Rolling disenchant on %item% (%rule%)"] = "Rolling disenchant on %item% (%rule%)"
 -- L["Rolling greed on %item% (%rule%)"] = "Rolling greed on %item% (%rule%)"
 -- L["Rolling is tried from left to right"] = "Rolling is tried from left to right"
 -- L["Rolling need on %item% (%rule%)"] = "Rolling need on %item% (%rule%)"
 -- L["Rolling pass on %item% (%rule%)"] = "Rolling pass on %item% (%rule%)"
-L["Rule List"] = "Lista de Reglas"
+-- L["Rule List"] = "Rule List"
 -- L["Skipping %rule%"] = "Skipping %rule%"
 -- L["Skip Rules"] = "Skip Rules"
 -- L["Skip rules that have disabled or unknown filters."] = "Skip rules that have disabled or unknown filters."
@@ -81,12 +81,12 @@ L["Rule List"] = "Lista de Reglas"
 -- L["Test an item link to see how we would roll"] = "Test an item link to see how we would roll"
 -- L["Unable to copy rule"] = "Unable to copy rule"
 -- L["Unknown Filters"] = "Unknown Filters"
-L["Up"] = "Arriba"
+-- L["Up"] = "Up"
 -- L["Will pass on all loot matching this rule."] = "Will pass on all loot matching this rule."
 -- L["Will roll greed on all loot matching this rule."] = "Will roll greed on all loot matching this rule."
 -- L["Will roll need on all loot matching this rule."] = "Will roll need on all loot matching this rule."
 
-local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "esES", false)
+local LM = LibStub("AceLocale-3.0"):NewLocale("PassLoot_Modules", "esMX", false)
 -- LM["10 Man Raid"] = "10 Man Raid"
 -- LM["25 Man Raid"] = "25 Man Raid"
 -- LM["Accessories"] = "Accessories"
