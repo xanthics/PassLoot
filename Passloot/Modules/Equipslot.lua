@@ -248,46 +248,11 @@ function module:OnEnable()
   self:SetupValues()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
-  self:CheckDBVersion(4, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "EquipSlot", {} }
-    }
-    if ( Rule.EquipSlot ) then
-      Table[1][2][1] = { Rule.EquipSlot, false }
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "EquipSlot", {} },
-    }
-    if ( type(Rule.EquipSlot) == "table" ) then
-      for Key, Value in ipairs(Rule.EquipSlot) do
-        Table[1][2][Key] = { Value, false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 3 ) then
-    local Table = {
-      { "EquipSlot", nil },
-    }
-    if ( type(Rule.EquipSlot) == "table" ) then
-      if ( #Rule.EquipSlot == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

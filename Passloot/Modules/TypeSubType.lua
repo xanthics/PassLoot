@@ -622,56 +622,11 @@ function module:OnEnable()
   self:SetupValues()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
-  self:CheckDBVersion(4, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "Type", nil },
-      { "SubType", nil },
-      { "TypeSubType", {} },
-    }
-    if ( Rule.Type and Rule.SubType ) then
-      Table[3][2][1] = {
-        Rule.Type,
-        Rule.SubType,
-        false
-      }
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "Type", nil },
-      { "SubType", nil },
-      { "TypeSubType", {} },
-    }
-    if ( type(Rule.TypeSubType) == "table" ) then
-      for Key, Value in ipairs(Rule.TypeSubType) do
-        Table[3][2][Key] = { Value[1], Value[2], false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 3 ) then
-    local Table = {
-      { "Type", nil },
-      { "SubType", nil },
-      { "TypeSubType", nil },
-    }
-    if ( type(Rule.TypeSubType) == "table" ) then
-      if ( #Rule.TypeSubType == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

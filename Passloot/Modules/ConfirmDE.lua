@@ -23,7 +23,6 @@ function module:OnEnable()
     -- Hooked = true
   -- end
   self.ItemsAwaitingConfirmation = {}
-  self:CheckDBVersion(1, "UpgradeDatabase")
 end
 
 function module:OnDisable()
@@ -32,10 +31,6 @@ function module:OnDisable()
   self:UnregisterMessage("PassLoot_OnRoll")
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  return
 end
 
 -- Order of events currently in 3.3:

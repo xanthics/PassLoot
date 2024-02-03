@@ -31,37 +31,11 @@ function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
   -- self:AddProfileWidget(self.Widget)
-  self:CheckDBVersion(3, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "LearnedItem", {} },
-    }
-    if ( type(Rule.LearnedItem) == "table" ) then
-      for Key, Value in ipairs(Rule.LearnedItem) do
-        Table[1][2][Key] = { Value, false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "LearnedItem", nil },
-    }
-    if ( type(Rule.LearnedItem) == "table" ) then
-      if ( #Rule.LearnedItem == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

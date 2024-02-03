@@ -51,7 +51,6 @@ function module:OnEnable()
   end
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
-  self:CheckDBVersion(3, "UpgradeDatabase")
 end
 
 function module:OnDisable()
@@ -79,31 +78,6 @@ if ( select(4, GetBuildInfo()) < 30200 ) then
       end
     end
   end
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "ItemPrice", {} },
-    }
-    if ( type(Rule.ItemPrice) == "table" ) then
-      for Key, Value in ipairs(Rule.ItemPrice) do
-        Table[1][2][Key] = { Value[1], Value[2], false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "ItemPrice", nil },
-    }
-    if ( type(Rule.ItemPrice) == "table" ) then
-      if ( #Rule.ItemPrice == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 local function SetMoney_MoneyInputFrame(Frame, Money)

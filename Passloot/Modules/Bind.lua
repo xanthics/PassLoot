@@ -54,46 +54,11 @@ function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
   -- self:AddProfileWidget(self.Widget)
-  self:CheckDBVersion(4, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "Bind", {} },
-    }
-    if ( Rule.Bind ) then
-      Table[1][2][1] = { Rule.Bind, false }
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "Bind", {} },
-    }
-    if ( type(Rule.Bind) == "table" ) then
-      for Key, Value in ipairs(Rule.Bind) do
-        Table[1][2][Key] = { Value, false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 3 ) then
-    local Table = {
-      { "Bind", nil },
-    }
-    if ( type(Rule.Bind) == "table" ) then
-      if ( #Rule.Bind == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

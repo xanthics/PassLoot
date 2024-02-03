@@ -31,26 +31,11 @@ function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
   -- self:AddProfileWidget(self.Widget)
-  self:CheckDBVersion(2, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "Usable", nil },
-    }
-    if ( type(Rule.Usable) == "table" ) then
-      if ( #Rule.Usable == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

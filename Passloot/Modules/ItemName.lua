@@ -34,38 +34,12 @@ function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
   self:AddModuleOptionTable("UseRegEx", self.ProfileOptionsTable)
-  self:CheckDBVersion(3, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
   self:RemoveModuleOptionTable("UseRegEx")
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "Items", {} },
-    }
-    if ( type(Rule.Items) == "table" ) then
-      for Key, Value in ipairs(Rule.Items) do
-        Table[1][2][Key] = { Value.Name, Value.Type, false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "Items", nil },
-    }
-    if ( type(Rule.Items) == "table" ) then
-      if ( #Rule.Items == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

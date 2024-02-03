@@ -283,7 +283,6 @@ end
 
 function PassLoot:OnEnable()
   self:RegisterEvent("START_LOOT_ROLL")
-  self:UpgradeDatabase()
   self:SetupModulesOptionsTables() -- Creates Module header frames and lays them out in the scroll frame
   self:OnProfileChanged()
   self.LastRolls = {}  -- Last 10 rolls.
@@ -551,52 +550,6 @@ function PassLoot:Debug(...)
       DebugLine = DebugLine..select(Counter, ...)
     end
     self:Print(DebugLine)
-  end
-end
-
-function PassLoot:UpgradeDatabase()
-  -- Function to only change internal database
-  -- Rule database stuff should be handled by each individual module.
-  if ( ( not self.db.global.DBVersion and not PassLootDB.DBVersion ) or self.db.global.DBVersion == 7 ) then
-self:Debug("DB Version 7 Found")
-    self.db.global.DBVersion = nil
-    PassLootDB.DBVersion = 8
-  end
-  if ( PassLootDB and PassLootDB.DBVersion ) then
-    if ( PassLootDB.DBVersion < 10 ) then
-      self:Debug("DB Version Pre-10 Found")
-      -- No longer used, as all rule variables are handled by modules now.
-      -- self:CheckAllRuleTables()
-      PassLootDB.DBVersion = 10
-    end
-    if ( PassLootDB.DBVersion < 11 ) then
-      self:Debug("DB Version Pre-11 Found")
-      self:IterateRules("UpgradeTo11")
-      PassLootDB.DBVersion = 11
-    end
-    if ( PassLootDB.DBVersion < 12 ) then
-      self:Debug("DB Version Pre-12 Found")
-      self:IterateRules("UpgradeTo12")
-      PassLootDB.DBVersion = 12
-    end
-  end
-end
-
-function PassLoot:UpgradeTo11(RuleData)
-  if ( type(RuleData.Loot) == "string" and RuleData.Loot ~= "disabled" ) then
-    RuleData.Loot = { RuleData.Loot }
-  else
-    RuleData.Loot = {}
-  end
-  if ( RuleData.Disenchant ) then
-    table.insert(RuleData.Loot, 1, "de")
-  end
-  RuleData.Disenchant = nil
-end
-
-function PassLoot:UpgradeTo12(RuleData)
-  if ( type(RuleData.Loot) == "table" ) then
-    table.sort(RuleData.Loot, function(a, b) return self.RollOrderToIndex[a] < self.RollOrderToIndex[b] end)
   end
 end
 

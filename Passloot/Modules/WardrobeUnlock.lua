@@ -26,15 +26,12 @@ function module:OnEnable()
 	self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
 	self:AddWidget(self.Widget)
 	-- self:AddProfileWidget(self.Widget)
-	self:CheckDBVersion(1, "UpgradeDatabase")
 end
 
 function module:OnDisable()
 	self:UnregisterDefaultVariables()
 	self:RemoveWidgets()
 end
-
-function module:UpgradeDatabase(FromVersion, Rule) return end
 
 function module:CreateWidget()
 	local Widget = CreateFrame("Frame", "PassLoot_Frames_Widgets_Wardrobe", nil, "UIDropDownMenuTemplate")

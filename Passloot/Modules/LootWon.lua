@@ -72,7 +72,6 @@ function module:OnEnable()
   self:RegisterMessage("PassLoot_OnRoll")
   self.ItemsBeingRolledOn = {}
   self.InRaid = false
-  self:CheckDBVersion(4, "UpgradeDatabase")
   self:RAID_ROSTER_UPDATE()
 end
 
@@ -84,47 +83,6 @@ function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
   self:RemoveModuleOptionTable("ResetLootCounter")
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "LootWonLogicalOperator", nil },
-      { "LootWonComparison", {} },
-    }
-    if ( Rule.LootWonLogicalOperator and Rule.LootWonComparison ) then
-      Table[2][2][1] = {
-        Rule.LootWonLogicalOperator,
-        Rule.LootWonComparison,
-        false
-      }
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "LootWonLogicalOperator", Rule.LootWonLogicalOperator },
-      { "LootWonComparison", {} },
-    }
-    if ( type(Rule.LootWonComparison) == "table" ) then
-      for Key, Value in ipairs(Rule.LootWonComparison) do
-        Table[2][2][Key] = { Value[1], Value[2], false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 3 ) then
-    local Table = {
-      { "LootWonCounter", Rule.LootWonCounter },
-      { "LootWonComparison", nil },
-    }
-    if ( type(Rule.LootWonComparison) == "table" ) then
-      if ( #Rule.LootWonComparison == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CHAT_MSG_LOOT(Event, ...)

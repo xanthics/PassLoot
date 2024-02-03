@@ -16,26 +16,11 @@ module.NewFilterValue = L["Temp Name"]
 function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
-  self:CheckDBVersion(2, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "PlayerName", nil },
-    }
-    if ( type(Rule.PlayerName) == "table" ) then
-      if ( #Rule.PlayerName == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()

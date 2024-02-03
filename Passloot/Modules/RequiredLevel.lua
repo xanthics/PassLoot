@@ -44,37 +44,11 @@ module.NewFilterValue_Comparison = 0
 function module:OnEnable()
   self:RegisterDefaultVariables(self.ConfigOptions_RuleDefaults)
   self:AddWidget(self.Widget)
-  self:CheckDBVersion(3, "UpgradeDatabase")
 end
 
 function module:OnDisable()
   self:UnregisterDefaultVariables()
   self:RemoveWidgets()
-end
-
-function module:UpgradeDatabase(FromVersion, Rule)
-  if ( FromVersion == 1 ) then
-    local Table = {
-      { "RequiredLevel", {} },
-    }
-    if ( type(Rule.RequiredLevel) == "table" ) then
-      for Key, Value in ipairs(Rule.RequiredLevel) do
-        Table[1][2][Key] = { Value[1], Value[2], false }
-      end
-    end
-    return Table
-  end
-  if ( FromVersion == 2 ) then
-    local Table = {
-      { "RequiredLevel", nil },
-    }
-    if ( type(Rule.RequiredLevel) == "table" ) then
-      if ( #Rule.RequiredLevel == 0 ) then
-        return Table
-      end
-    end
-  end
-  return
 end
 
 function module:CreateWidget()
