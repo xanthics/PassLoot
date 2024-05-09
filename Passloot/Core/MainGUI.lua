@@ -494,15 +494,10 @@ function PassLoot:Create_RuleListFrame()
 	Frame.ScrollFrame:SetPoint("TOPLEFT", Frame, "TOPLEFT", 0, -8)
 	Frame.ScrollFrame:SetWidth(381)
 	Frame.ScrollFrame:SetHeight(96)
-	if (select(4, GetBuildInfo()) >= 30000) then
-		Frame.ScrollFrame:SetScript("OnVerticalScroll", function(frame, offset)
-			FauxScrollFrame_OnVerticalScroll(frame, offset, 16, function() self:Rules_RuleList_OnScroll() end)
-		end)
-	else
-		Frame.ScrollFrame:SetScript("OnVerticalScroll", function()
-			FauxScrollFrame_OnVerticalScroll(16, function() self:Rules_RuleList_OnScroll() end)
-		end)
-	end
+	Frame.ScrollFrame:SetScript("OnVerticalScroll", function(frame, offset)
+		FauxScrollFrame_OnVerticalScroll(frame, offset, 16, function() self:Rules_RuleList_OnScroll() end)
+	end)
+
 
 	Frame.ScrollLine1 = self:Create_RuleListScrollLine()
 	Frame.ScrollLine1:SetParent(Frame)
@@ -588,7 +583,7 @@ end
 
 function PassLoot:CopyCurrentRuleToProfile(profile)
 	local self =
-	PassLoot            -- as I will be using this from PassLoot.CopyCurrentRuleToProfile and the first arg will be the frame
+		PassLoot -- as I will be using this from PassLoot.CopyCurrentRuleToProfile and the first arg will be the frame
 	if (self.CurrentRule > 0) then
 		if (not self.db.profiles[profile] or not self.db.profiles[profile].Rules) then
 			self:Print(L["Unable to copy rule"])
@@ -668,8 +663,10 @@ function PassLoot:Create_RuleListScrollLine()
 	Frame.Need:SetPoint("TOPLEFT", Frame.Text, "TOPRIGHT")
 	Frame.Need:SetScript("OnClick", function(frame, button) self:SetLootMethod(Frame.LineNum, "need") end)
 	Frame.Need:SetScript("OnEnter",
-		function() self:ShowTooltip(L["Need"], L["Will roll need on all loot matching this rule."],
-				L["Rolling is tried from left to right"]) end)
+		function()
+			self:ShowTooltip(L["Need"], L["Will roll need on all loot matching this rule."],
+				L["Rolling is tried from left to right"])
+		end)
 	Frame.Need.Text:SetText(L["Need"])
 
 	Frame.Disenchant = self:Create_CheckBox()
@@ -686,8 +683,10 @@ function PassLoot:Create_RuleListScrollLine()
 	Frame.Greed:SetPoint("TOPLEFT", Frame.Disenchant, "TOPRIGHT", 40, 0)
 	Frame.Greed:SetScript("OnClick", function(frame, button) self:SetLootMethod(Frame.LineNum, "greed") end)
 	Frame.Greed:SetScript("OnEnter",
-		function() self:ShowTooltip(L["Greed"], L["Will roll greed on all loot matching this rule."],
-				L["Rolling is tried from left to right"]) end)
+		function()
+			self:ShowTooltip(L["Greed"], L["Will roll greed on all loot matching this rule."],
+				L["Rolling is tried from left to right"])
+		end)
 	Frame.Greed.Text:SetText(L["Greed"])
 
 	Frame.Pass = self:Create_CheckBox()
@@ -695,8 +694,10 @@ function PassLoot:Create_RuleListScrollLine()
 	Frame.Pass:SetPoint("TOPLEFT", Frame.Greed, "TOPRIGHT", 40, 0)
 	Frame.Pass:SetScript("OnClick", function(frame, button) self:SetLootMethod(Frame.LineNum, "pass") end)
 	Frame.Pass:SetScript("OnEnter",
-		function() self:ShowTooltip(L["Pass"], L["Will pass on all loot matching this rule."],
-				L["Rolling is tried from left to right"]) end)
+		function()
+			self:ShowTooltip(L["Pass"], L["Will pass on all loot matching this rule."],
+				L["Rolling is tried from left to right"])
+		end)
 	Frame.Pass.Text:SetText(L["Pass"])
 
 
@@ -866,15 +867,9 @@ function PassLoot:Create_RuleAvailableFiltersFrame()
 	Frame.ScrollFrame:SetPoint("TOPLEFT", Frame, "TOPLEFT", 0, -5)
 	Frame.ScrollFrame:SetWidth(162)
 	Frame.ScrollFrame:SetHeight(128)
-	if (select(4, GetBuildInfo()) >= 30000) then
-		Frame.ScrollFrame:SetScript("OnVerticalScroll", function(frame, offset)
-			FauxScrollFrame_OnVerticalScroll(frame, offset, 16, function() self:Rules_AvailableFilters_OnScroll() end)
-		end)
-	else
-		Frame.ScrollFrame:SetScript("OnVerticalScroll", function()
-			FauxScrollFrame_OnVerticalScroll(16, function() self:Rules_AvailableFilters_OnScroll() end)
-		end)
-	end
+	Frame.ScrollFrame:SetScript("OnVerticalScroll", function(frame, offset)
+		FauxScrollFrame_OnVerticalScroll(frame, offset, 16, function() self:Rules_AvailableFilters_OnScroll() end)
+	end)
 
 	Frame.ScrollLine1 = self:Create_AvailableFiltersScrollLine()
 	Frame.ScrollLine1:SetParent(Frame)
@@ -939,15 +934,9 @@ function PassLoot:Create_RuleActiveFiltersFrame()
 	Frame.ScrollFrame:SetPoint("TOPLEFT", Frame, "TOPLEFT", 0, -5)
 	Frame.ScrollFrame:SetWidth(185)
 	Frame.ScrollFrame:SetHeight(128)
-	if (select(4, GetBuildInfo()) >= 30000) then
-		Frame.ScrollFrame:SetScript("OnVerticalScroll", function(frame, offset)
-			FauxScrollFrame_OnVerticalScroll(frame, offset, 16, function() self:Rules_ActiveFilters_OnScroll() end)
-		end)
-	else
-		Frame.ScrollFrame:SetScript("OnVerticalScroll", function()
-			FauxScrollFrame_OnVerticalScroll(16, function() self:Rules_ActiveFilters_OnScroll() end)
-		end)
-	end
+	Frame.ScrollFrame:SetScript("OnVerticalScroll", function(frame, offset)
+		FauxScrollFrame_OnVerticalScroll(frame, offset, 16, function() self:Rules_ActiveFilters_OnScroll() end)
+	end)
 
 	Frame.ScrollLine1 = self:Create_ActiveFiltersScrollLine()
 	Frame.ScrollLine1:SetParent(Frame)
