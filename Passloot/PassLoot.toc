@@ -1,56 +1,13 @@
 ﻿## Interface: 30300
 ## Title: PassLoot
 ## Author: Odlaw, Modified for Ascension by Xan
-## Version: 4.3
+## Version: 1.0
 ## Notes: Auto roll greed, need, pass or manually roll on items.
 ## Notes-zhCN: 自动在指定的物品上采取贪婪，需求或者放弃的掷骰操作
 ## SavedVariables: PassLootDB
 ## OptionalDeps: Ace3, LibBabble-Inventory-3.0, LibSink-2.0, LibDataBroker-1.1
-#@no-lib-strip@
-Libs\LibStub\LibStub.lua
-libs\AceTimer-3.0\AceTimer-3.0.xml
-Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\AceAddon-3.0\AceAddon-3.0.xml
-Libs\AceEvent-3.0\AceEvent-3.0.xml
-Libs\AceDB-3.0\AceDB-3.0.xml
-Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
-Libs\AceLocale-3.0\AceLocale-3.0.xml
-Libs\AceConsole-3.0\AceConsole-3.0.xml
-Libs\AceGUI-3.0\AceGUI-3.0.xml
-Libs\AceConfig-3.0\AceConfig-3.0.xml
-Libs\LibBabble-Inventory-3.0\lib.xml
-Libs\LibBabble-TalentTree-3.0\lib.xml
-Libs\LibSink-2.0\lib.xml
-Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
-#@end-no-lib-strip@
-Locales.xml
-PassLoot.lua
-Constants.lua
-MainGUI.lua
-ModulesGUI.lua
-Modules\ZoneName.lua
-Modules\ZoneType.lua
-Modules\Quality.lua
-Modules\Bind.lua
-Modules\CanIRoll.lua
-Modules\ConfirmBoP.lua
-Modules\ConfirmDE.lua
-Modules\Unique.lua
-Modules\Equipslot.lua
-Modules\TypeSubType.lua
-Modules\LearnedItem.lua
-Modules\ItemLevel.lua
-Modules\RequiredLevel.lua
-Modules\GroupRaid.lua
-Modules\ItemName.lua
-Modules\ItemPrice.lua
-Modules\LootWon.lua
-Modules\Usable.lua
-Modules\Inventory.lua
-Modules\ClassSpec.lua
-Modules\PlayerName.lua
-Modules\GuildGroup.lua
-Modules\Equipable.lua
-Modules\VanityUnlock.lua
-Modules\WardrobeUnlock.lua
-Modules\MysticEnchant.lua
+
+Libs\Libs.xml
+Locales\Locales.xml
+Core\core.xml
+Modules\Modules.xml

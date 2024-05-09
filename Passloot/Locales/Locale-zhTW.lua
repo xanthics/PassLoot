@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "zhTW", false)
+local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "zhTW", false)
 if not L then return end
 L["Active Filters"] = "活動過濾"
 L["Active Filters_Desc"] = [=[選擇過濾更改, 或 shift-右鍵點擊移除此過濾

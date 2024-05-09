@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "esMX", false)
+local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "esMX", false)
 if not L then return end
 -- L["Active Filters"] = "Active Filters"
 --[==[ L["Active Filters_Desc"] = [=[Select a filter to modify, or shift-right-click to remove this filter

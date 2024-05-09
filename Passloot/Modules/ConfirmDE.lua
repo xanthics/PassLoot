@@ -1,4 +1,4 @@
-﻿local PassLoot = LibStub("AceAddon-3.0"):GetAddon("PassLoot")
+local PassLoot = LibStub("AceAddon-3.0"):GetAddon("PassLoot")
 local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot_Modules")
 local module = PassLoot:NewModule(L["Confirm DE"], "AceEvent-3.0")
 if ( not module ) then

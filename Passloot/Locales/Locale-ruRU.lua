@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "ruRU", false)
+local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "ruRU", false)
 if not L then return end
 L["Active Filters"] = "Активные фильтры" -- Needs review
 L["Active Filters_Desc"] = [=[Выберите фильтр для редактирования, или нажмите shift-правый-клик чтобы удалить его

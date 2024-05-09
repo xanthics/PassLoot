@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "zhCN", false)
+local L = LibStub("AceLocale-3.0"):NewLocale("PassLoot", "zhCN", false)
 if not L then return end
 L["Active Filters"] = "激活过滤条件" -- Needs review
 L["Active Filters_Desc"] = [=[点击编辑过滤条件,shift+右键删除过滤条件
