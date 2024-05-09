@@ -8,9 +8,9 @@ Checklist if creating a new module
 - Modify SetMatch and GetMatch
 - Create/Modify local functions as needed
 ]]
-local module_key = "RequiredLevel"
-local module_name = L["Required Level"]
-local module_tooltip = L["Selected rule will only match usable items."]
+local module_key = "PlayerLevel"
+local module_name = L["Player Level"]
+local module_tooltip = L["PlayerLevel_DropDownTooltipDesc"]
 
 local module = PassLoot:NewModule(module_name)
 
@@ -64,10 +64,10 @@ function module:OnDisable()
 end
 
 function module:CreateWidget()
-	local frame_name = "PassLoot_Frames_Widgets_RequiredLevelComparison"
+	local frame_name = "PassLoot_Frames_Widgets_PlayerLevelComparison"
 	local DropDown = PassLoot:CreateSimpleDropdown(self, module_name, frame_name, module_tooltip)
 
-	local dropdownframe_name = "PassLoot_Frames_Widgets_RequiredLevelDropDownEditBox"
+	local dropdownframe_name = "PassLoot_Frames_Widgets_PlayerLevelDropDownEditBox"
 	local DropDownEditBox = PassLoot:CreateDropDownEditBox(self, dropdownframe_name)
 	return DropDown, DropDownEditBox
 end
@@ -111,14 +111,14 @@ function module.Widget:DisplayWidget(Index)
 	local Value = self:GetData()
 	local Value_LogicalOperator = Value[module.FilterIndex][1]
 	local Value_Comparison = Value[module.FilterIndex][2]
-	UIDropDownMenu_SetText(module.Widget, module:GetRequiredLevelText(Value_LogicalOperator, Value_Comparison))
+	UIDropDownMenu_SetText(module.Widget, module:GetPlayerLevelText(Value_LogicalOperator, Value_Comparison))
 end
 
 function module.Widget:GetFilterText(Index)
 	local Value = self:GetData()
 	local LogicalOperator = Value[Index][1]
 	local Comparison = Value[Index][2]
-	local Text = module:GetRequiredLevelText(LogicalOperator, Comparison)
+	local Text = module:GetPlayerLevelText(LogicalOperator, Comparison)
 	return Text
 end
 
@@ -134,36 +134,33 @@ function module.Widget:SetException(RuleNum, Index, Value)
 end
 
 function module.Widget:SetMatch(itemObj, Tooltip)
-	module.CurrentMatch = itemObj.reqLevel
-	module:Debug("Required Level: " .. (module.CurrentMatch))
+	module.CurrentMatch = UnitLevel("player")
+	module:Debug("Player Level: " .. (module.CurrentMatch or ""))
 end
 
 function module.Widget:GetMatch(RuleNum, Index)
-	local Value = self:GetData(RuleNum)
-	local LogicalOperator = Value[Index][1]
-	local Comparison = self:Evaluate(Value[Index][2])
-	if (not Comparison) then
-		return false
-	end
+	local RuleValue = self:GetData(RuleNum)
+	local LogicalOperator = RuleValue[Index][1]
+	local Comparison = tonumber(RuleValue[Index][2])
 	if (LogicalOperator > 1) then
 		if (LogicalOperator == 2) then -- Equal To
 			if (module.CurrentMatch ~= Comparison) then
-				module:Debug("RequiredLevel (" .. module.CurrentMatch .. ") ~= " .. Comparison)
+				module:Debug("PlayerLevel (" .. module.CurrentMatch .. ") ~= " .. Comparison)
 				return false
 			end
 		elseif (LogicalOperator == 3) then -- Not Equal To
 			if (module.CurrentMatch == Comparison) then
-				module:Debug("RequiredLevel (" .. module.CurrentMatch .. ") == " .. Comparison)
+				module:Debug("PlayerLevel (" .. module.CurrentMatch .. ") == " .. Comparison)
 				return false
 			end
 		elseif (LogicalOperator == 4) then -- Less than
 			if (module.CurrentMatch >= Comparison) then
-				module:Debug("RequiredLevel (" .. module.CurrentMatch .. ") >= " .. Comparison)
+				module:Debug("PlayerLevel (" .. module.CurrentMatch .. ") >= " .. Comparison)
 				return false
 			end
 		elseif (LogicalOperator == 5) then -- Greater than
 			if (module.CurrentMatch <= Comparison) then
-				module:Debug("RequiredLevel (" .. module.CurrentMatch .. ") <= " .. Comparison)
+				module:Debug("PlayerLevel (" .. module.CurrentMatch .. ") <= " .. Comparison)
 				return false
 			end
 		end
@@ -174,12 +171,11 @@ end
 -- Create an environment for the functions, so they can't access globals and such.
 -- We can also add our variables here, so we don't have to string.gsub
 module.Widget.Environment = {
-	[L["level"]] = 0,
+	[L["current"]] = 0,
 }
 module.Widget.CachedFunc, module.Widget.CachedError = {},
 	{} -- A list of functions and errors we have already tried loading
 function module.Widget:Evaluate(Logic)
-	self.Environment[L["level"]] = UnitLevel("player")
 	local Function, Error = self.CachedFunc[Logic], self.CachedError[Logic]
 	if (not Function and not Error) then
 		Function, Error = loadstring("return " .. Logic)
@@ -241,32 +237,20 @@ end
 function module:DropDown_OnClick(Frame)
 	local Value = self.Widget:GetData()
 	local LogicalOperator = Frame.value
-	local Comparison = Value[self.FilterIndex][2]
+	local Comparison = tonumber(Value[self.FilterIndex][2])
 	if (Frame:GetName() == self.DropDownEditBox:GetName()) then
 		Comparison = Frame:GetText() or ""
-		-- Comparison = tonumber(Frame:GetText()) or 0
-		-- if ( Comparison < -1 ) then
-		-- Comparison = 0
-		-- end
-		-- if ( Comparison >= 0 ) then
-		-- Comparison = math.floor(Comparison + 0.5)
-		-- else
-		-- Comparison = math.ceil(Comparison - 0.5)
-		-- end
 	end
 	Value[self.FilterIndex][1] = LogicalOperator
 	Value[self.FilterIndex][2] = Comparison
 	self:SetConfigOption(module_key, Value)
-	UIDropDownMenu_SetText(Frame.owner, self:GetRequiredLevelText(LogicalOperator, Comparison))
+	UIDropDownMenu_SetText(Frame.owner, self:GetPlayerLevelText(LogicalOperator, Comparison))
 	self.DropDownEditBox:Hide()
 	self.DropDownEditBox:ClearAllPoints()
 	self.DropDownEditBox:SetParent(nil)
 end
 
-function module:GetRequiredLevelText(LogicalOperator, Comparison)
-	-- if ( Comparison == -1 ) then
-	-- Comparison = string.gsub(L["My Level (%num%)"], "%%num%%", UnitLevel("player"))
-	-- end
+function module:GetPlayerLevelText(LogicalOperator, Comparison)
 	for Key, Value in ipairs(self.Choices) do
 		if (Value.Value == LogicalOperator) then
 			return string.gsub(Value.Text, "%%num%%", Comparison)

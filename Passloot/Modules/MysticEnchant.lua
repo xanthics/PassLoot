@@ -1,8 +1,20 @@
 local PassLoot = LibStub("AceAddon-3.0"):GetAddon("PassLoot")
-local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot_Modules")
-local module = PassLoot:NewModule(L["Mystic Enchant"])
+local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot")
+--[[
+Checklist if creating a new module
+- first choose an existing module that most closely matches what you want to do
+- modify module_key, module_name, module_tooltip to unique values
+- make sure to update locales
+- Modify SetMatch and GetMatch
+- Create/Modify local functions as needed
+]]
+local module_key = "MysticEnchant"
+local module_name = L["Mystic Enchant"]
+local module_tooltip = L["Selected rule will only match unlearned mystic enchants."]
 
-module.Choices = {{
+local module = PassLoot:NewModule(module_name)
+
+module.Choices = { {
 	["Name"] = L["Any RE"],
 	["Value"] = 1,
 }, {
@@ -23,12 +35,17 @@ module.Choices = {{
 }, {
 	["Name"] = L["Non-WRE Unknown"],
 	["Value"] = 7,
-}}
+} }
 
-module.ConfigOptions_RuleDefaults = { -- { VariableName, Default },
-{"MysticEnchant", {
-	-- [1] = { Value, Exception }
-}}}
+module.ConfigOptions_RuleDefaults = {
+	-- { VariableName, Default },
+	{
+		module_key,
+		-- {
+		-- [1] = { Value, Exception }
+		-- },
+	},
+}
 module.NewFilterValue = 1
 
 function module:OnEnable()
@@ -43,58 +60,15 @@ function module:OnDisable()
 end
 
 function module:CreateWidget()
-	local Widget = CreateFrame("Frame", "PassLoot_Frames_Widgets_MysticEnchant", nil, "UIDropDownMenuTemplate")
-	Widget:EnableMouse(true)
-	Widget:SetHitRectInsets(15, 15, 0, 0)
-	_G[Widget:GetName() .. "Text"]:SetJustifyH("CENTER")
-	if (select(4, GetBuildInfo()) < 30000) then
-		UIDropDownMenu_SetWidth(120, Widget)
-	else
-		UIDropDownMenu_SetWidth(Widget, 120)
-	end
-	Widget:SetScript("OnEnter", function() self:ShowTooltip(L["Mystic Enchant"], L["Selected rule will only match unlearned mystic enchants."]) end)
-	Widget:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	local Button = _G[Widget:GetName() .. "Button"]
-	Button:SetScript("OnEnter", function() self:ShowTooltip(L["Mystic Enchant"], L["Selected rule will only match unlearned mystic enchants."]) end)
-	Button:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	local Title = Widget:CreateFontString(Widget:GetName() .. "Title", "BACKGROUND", "GameFontNormalSmall")
-	Title:SetParent(Widget)
-	Title:SetPoint("BOTTOMLEFT", Widget, "TOPLEFT", 20, 0)
-	Title:SetText(L["Mystic Enchant"])
-	Widget:SetParent(nil)
-	Widget:Hide()
-	if (select(4, GetBuildInfo()) < 30000) then
-		Widget.initialize = function(...) self:DropDown_Init(Widget, ...) end
-	else
-		Widget.initialize = function(...) self:DropDown_Init(...) end
-	end
-	Widget.YPaddingTop = Title:GetHeight()
-	Widget.Height = Widget:GetHeight() + Widget.YPaddingTop
-	Widget.XPaddingLeft = -15
-	Widget.XPaddingRight = -15
-	Widget.Width = Widget:GetWidth() + Widget.XPaddingLeft + Widget.XPaddingRight
-	Widget.PreferredPriority = 4
-	Widget.Info = {L["Mystic Enchant"], L["Selected rule will only match unlearned mystic enchants."]}
-	return Widget
+	local frame_name = "PassLoot_Frames_Widgets_MysticEnchant"
+	return PassLoot:CreateSimpleDropdown(self, module_name, frame_name, module_tooltip)
 end
+
 module.Widget = module:CreateWidget()
 
--- Local function to get the data and make sure it's valid data
+-- Local function to get the data or return an empty table if no data found
 function module.Widget:GetData(RuleNum)
-	local Data = module:GetConfigOption("MysticEnchant", RuleNum)
-	local Changed = false
-	if (not Data or type(Data) ~= "table") then
-		Data = {}
-		Changed = true
-	end
-	for Key, Value in ipairs(Data) do
-		if (type(Value) ~= "table" or type(Value[1]) ~= "number") then
-			Data[Key] = {module.NewFilterValue, false}
-			Changed = true
-		end
-	end
-	if (Changed) then module:SetConfigOption("MysticEnchant", Data) end
-	return Data
+	return module:GetConfigOption(module_key, RuleNum) or {}
 end
 
 function module.Widget:GetNumFilters(RuleNum)
@@ -104,24 +78,23 @@ end
 
 function module.Widget:AddNewFilter()
 	local Value = self:GetData()
-	table.insert(Value, {module.NewFilterValue, false})
-	module:SetConfigOption("MysticEnchant", Value)
+	table.insert(Value, { module.NewFilterValue, false })
+	module:SetConfigOption(module_key, Value)
 end
 
 function module.Widget:RemoveFilter(Index)
 	local Value = self:GetData()
 	table.remove(Value, Index)
-	module:SetConfigOption("MysticEnchant", Value)
+	if (#Value == 0) then
+		Value = nil
+	end
+	module:SetConfigOption(module_key, Value)
 end
 
 function module.Widget:DisplayWidget(Index)
 	if (Index) then module.FilterIndex = Index end
 	local Value = self:GetData()
-	if (select(4, GetBuildInfo()) < 30000) then
-		UIDropDownMenu_SetText(module:GetUsableText(Value[module.FilterIndex][1]), module.Widget)
-	else
-		UIDropDownMenu_SetText(module.Widget, module:GetUsableText(Value[module.FilterIndex][1]))
-	end
+	UIDropDownMenu_SetText(module.Widget, module:GetUsableText(Value[module.FilterIndex][1]))
 end
 
 function module.Widget:GetFilterText(Index)
@@ -140,10 +113,9 @@ function module.Widget:SetException(RuleNum, Index, Value)
 	module:SetConfigOption("Unowned", Data)
 end
 
-function module.Widget:SetMatch(ItemLink, Tooltip)
+function module.Widget:SetMatch(itemObj, Tooltip)
 	local Owned = 0 -- 0 means not an RE
-	local itemID = GetItemInfoFromHyperlink(ItemLink)
-	local enchant = C_MysticEnchant.GetEnchantInfoByItem(itemID)
+	local enchant = C_MysticEnchant.GetEnchantInfoByItem(itemObj.id)
 
 	if enchant then
 		if enchant.Known then
@@ -157,7 +129,7 @@ function module.Widget:SetMatch(ItemLink, Tooltip)
 	end
 
 	module.CurrentMatch = Owned
-	module:Debug("MysticEnchant: " .. Owned .. " (" .. itemID .. ")")
+	module:Debug("MysticEnchant: " .. Owned .. " (" .. itemObj.link .. ")")
 end
 
 function module.Widget:GetMatch(RuleNum, Index)
@@ -165,14 +137,16 @@ function module.Widget:GetMatch(RuleNum, Index)
 	local RuleID = RuleValue[Index][1]
 
 	if module.CurrentMatch > 0 then
-		if (RuleID == 1) or -- any RE
-		(RuleID == 4 and module.CurrentMatch == 3) or -- wre known
-		(RuleID == 5 and module.CurrentMatch == 4) or -- wre unknown
-		(RuleID == 6 and module.CurrentMatch == 1) or -- non-wre known
-		(RuleID == 7 and module.CurrentMatch == 2) or -- non-wre unknown
-		(RuleID == 2 and module.CurrentMatch % 2 == 1) or -- re known
-		(RuleID == 3 and module.CurrentMatch % 2 == 0) -- re unknown
-		then return true end
+		if (RuleID == 1) or                          -- any RE
+			(RuleID == 4 and module.CurrentMatch == 3) or -- wre known
+			(RuleID == 5 and module.CurrentMatch == 4) or -- wre unknown
+			(RuleID == 6 and module.CurrentMatch == 1) or -- non-wre known
+			(RuleID == 7 and module.CurrentMatch == 2) or -- non-wre unknown
+			(RuleID == 2 and module.CurrentMatch % 2 == 1) or -- re known
+			(RuleID == 3 and module.CurrentMatch % 2 == 0) -- re unknown
+		then
+			return true
+		end
 	end
 
 	return false
@@ -182,11 +156,7 @@ function module:DropDown_Init(Frame, Level)
 	Level = Level or 1
 	local info = {}
 	info.checked = false
-	if (select(4, GetBuildInfo()) < 30000) then
-		info.func = function(...) self:DropDown_OnClick(this, ...) end
-	else
-		info.func = function(...) self:DropDown_OnClick(...) end
-	end
+	info.func = function(...) self:DropDown_OnClick(...) end
 	info.owner = Frame
 	for Key, Value in ipairs(self.Choices) do
 		info.text = Value.Name
@@ -198,12 +168,8 @@ end
 function module:DropDown_OnClick(Frame)
 	local Value = self.Widget:GetData()
 	Value[self.FilterIndex][1] = Frame.value
-	self:SetConfigOption("MysticEnchant", Value)
-	if (select(4, GetBuildInfo()) < 30000) then
-		UIDropDownMenu_SetText(Frame:GetText(), Frame.owner)
-	else
-		UIDropDownMenu_SetText(Frame.owner, Frame:GetText())
-	end
+	self:SetConfigOption(module_key, Value)
+	UIDropDownMenu_SetText(Frame.owner, Frame:GetText())
 end
 
 function module:GetUsableText(ID)
