@@ -16,8 +16,8 @@ local module = PassLoot:NewModule(module_name)
 
 module.Choices = {
 	L["Any"],
-	ITEM_QUALITY_COLORS[0].hex .. ITEM_QUALITY0_DESC .. "|r", --Poor
-	ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r", --Common
+	--ITEM_QUALITY_COLORS[0].hex .. ITEM_QUALITY0_DESC .. "|r", --Poor
+	--ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r", --Common
 	ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC .. "|r", --Uncommon
 	ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC .. "|r", --Rare
 	ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r", --Epic
@@ -104,13 +104,13 @@ end
 
 function module.Widget:SetMatch(itemObj, Tooltip)
 	module.CurrentMatch = itemObj.quality
-	module:Debug("Quality Type: " .. (Quality or "nil"))
+	module:Debug("Quality Type: " .. (itemObj.quality or "nil"))
 end
 
 function module.Widget:GetMatch(RuleNum, Index)
 	local RuleValue = self:GetData(RuleNum)
 	if (RuleValue[Index][1] > 1) then
-		if (RuleValue[Index][1] - 2 ~= tonumber(module.CurrentMatch)) then
+		if (RuleValue[Index][1] ~= tonumber(module.CurrentMatch)) then
 			return false
 		end
 	end

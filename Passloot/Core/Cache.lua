@@ -50,22 +50,29 @@ function PassLoot:BuildTooltipCache(item)
 	end
 end
 
-function PassLoot:GetItemEvaluation(item)
+function PassLoot:GetItemEvaluation(item, RollID)
 	initCache()
-	if not item or not item.link then return end
+	if not item or not item.link then
+		print("failed")
+		return
+	end
 	local cache = PassLoot.EvalCache
-	if not (cache[item.link] and cache[item.link]["expiresAt"] >= GetTime()) then
+	if not (cache[item.link] and cache[item.link]["expiresAt"] > GetTime()) or cache[item.link].result == nil then
 		if PassLoot:ValidateItemObj(item) then
-			local r, m = PassLoot:EvaluateItem(item)
-			cache[item.link] = { ["itemObj"] = item, ["result"] = r, ["match"] = m, ["expiresAt"] = GetTime() +
-			self.db.profile.CacheExpires }
+			local r, m = PassLoot:EvaluateItem(item, RollID)
+			cache[item.link] = {
+				["itemObj"] = item,
+				["result"] = r,
+				["match"] = m,
+				["expiresAt"] = GetTime() + self.db.profile.CacheExpires
+			}
 		else
-			cache[item.link] = { ["itemObj"] = item, ["result"] = 1, ["match"] = -1, ["expiresAt"] = GetTime() + 5 }
+			cache[item.link] = { ["itemObj"] = item, ["result"] = nil, ["match"] = -1, ["expiresAt"] = GetTime() + 5 }
 		end
 	end
-	return { cache[item.link]["result"], cache[item.link]["match"] }
+	return cache[item.link]["result"], cache[item.link]["match"]
 end
 
 function PassLoot:ValidateItemObj(itemObj)
-	return itemObj.name and itemObj.count and itemObj.id and itemObj.link
+	return itemObj.name and itemObj.id and itemObj.link
 end

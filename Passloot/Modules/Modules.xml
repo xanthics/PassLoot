@@ -6,6 +6,7 @@
 	<Script file="ConfirmDE.lua"/>
 	<Script file="Equipslot.lua"/>
 	<Script file="GroupRaid.lua"/>
+	<Script file="GuildGroup.lua"/>
 	<Script file="Inventory.lua"/>
 	<Script file="ItemID.lua"/>
 	<Script file="ItemLevel.lua"/>

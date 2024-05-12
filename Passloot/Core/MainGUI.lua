@@ -8,53 +8,53 @@ local LootOrderIcons = {
 
 --[=[  Frame layout:
 PassLoot.RulesFrame = {
-  ["List"] = {  -- Has a background
-    ["ScrollFrame"] = FauxScrollFrame,
-    ["ScrollLine1"] = {
-      ["Highlight"] = Highlight Texture,
-      ["Text"] = FontString,
+	["List"] = {  -- Has a background
+		["ScrollFrame"] = FauxScrollFrame,
+		["ScrollLine1"] = {
+			["Highlight"] = Highlight Texture,
+			["Text"] = FontString,
       ["Pass"] = CheckButton {
-        ["Title"] = FontString,
-      },
+				["Title"] = FontString,
+			},
       ["Greed"] = CheckButton {
-        ["Title"] = FontString,
-      },
+				["Title"] = FontString,
+			},
       ["Need"] = CheckButton {
-        ["Title"] = FontString,
-      },
-    },
-    ["ScrollLine6"],
-    ["Add"] = Button,
-    ["Remove"] = Button,
-    ["Up"] = Button,
-    ["Down"] = Button,
-  },
-  ["Settings"] = {  -- Has a background
-    ["Desc"] = EditBox {
-      ["Title"] = FontString,
-    },
-    ["AvailableFilters"] = {  -- Has a background
-      ["Title"] = FontString,
-      ["ScrollFrame"] = FauxScrollFrame,
-      ["ScrollLine1"] = {
-        ["Highlight"] = Highlight Texture,
-        ["Text"] = FontString,
-      },
-      ["ScrollLine8"],
-    },
-    ["ActiveFilters"] = {  -- Has a background
-      ["Title"] = FontString,
-      ["ScrollFrame"] = FauxScrollFrame,
-      ["ScrollLine1"] = {
-        ["Highlight"] = Highlight Texture,
-        ["Text"] = FontString,
-      },
-      ["ScrollLine8"],
-    },
-    ["Add"] = Button,
-    ["Remove"] = Button,
-    -- We insert rule widgets here, PassLoot.PluginInfo[ModuleName].RuleWidgets is a table of widgets per module.
-  },
+				["Title"] = FontString,
+			},
+		},
+		["ScrollLine6"],
+		["Add"] = Button,
+		["Remove"] = Button,
+		["Up"] = Button,
+		["Down"] = Button,
+	},
+	["Settings"] = {  -- Has a background
+		["Desc"] = EditBox {
+			["Title"] = FontString,
+		},
+		["AvailableFilters"] = {  -- Has a background
+			["Title"] = FontString,
+			["ScrollFrame"] = FauxScrollFrame,
+			["ScrollLine1"] = {
+				["Highlight"] = Highlight Texture,
+				["Text"] = FontString,
+			},
+			["ScrollLine8"],
+		},
+		["ActiveFilters"] = {  -- Has a background
+			["Title"] = FontString,
+			["ScrollFrame"] = FauxScrollFrame,
+			["ScrollLine1"] = {
+				["Highlight"] = Highlight Texture,
+				["Text"] = FontString,
+			},
+			["ScrollLine8"],
+		},
+		["Add"] = Button,
+		["Remove"] = Button,
+		-- We insert rule widgets here, PassLoot.PluginInfo[ModuleName].RuleWidgets is a table of widgets per module.
+	},
 }
 ]=]
 

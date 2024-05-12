@@ -142,7 +142,11 @@ PassLoot.OptionsTable = {
 			["get"] = function() end,
 			["set"] = function(info, value)
 				local _, link = GetItemInfo(value)
-				PassLoot.TestLink = PassLoot:InitItem(link)
+				if PassLoot.EvalCache[link] then
+					PassLoot.TestLink = PassLoot.EvalCache[link]["itemObj"]
+				else
+					PassLoot.TestLink = PassLoot:InitItem(link)
+				end
 				if (PassLoot.TestLink) then
 					PassLoot.TestCanNeed, PassLoot.TestCanGreed, PassLoot.TestCanDisenchant = true, true, true
 					PassLoot:START_LOOT_ROLL()
@@ -505,14 +509,10 @@ function PassLoot:UpdateBags(...)
 	-- TODO: forget any expired cache items
 	-- we processed the update, reset the queue
 	QueueOperations = { ["reset"] = false, ["IDs"] = {} }
-	-- cache any expired or uncached items in bag
-	for bag = 0, 4 do
-		for slot = 1, GetContainerNumSlots(bag) do
-			local ilink = GetContainerItemLink(bag, slot)
-			if ilink and (not PassLoot.EvalCache[ilink] or PassLoot.EvalCache[ilink]["expiresAt"] < currentTime) then
-				local itemObj = PassLoot:InitItem(ilink)
-				PassLoot:GetItemEvaluation(itemObj)
-			end
+	-- remove any cache that expired
+	for k, v in pairs(PassLoot.EvalCache) do
+		if PassLoot.EvalCache[k]["expiresAt"] < currentTime then
+			PassLoot.EvalCache[k] = nil
 		end
 	end
 end
@@ -534,6 +534,21 @@ function PassLoot:BAG_ITEM_COUNT_CHANGED(Bag, Slot, ID, NewStackNum, Change, ...
 	--	QueueOperations["BagSlots_Count"][Bag][Slot] = NewStackNum
 end
 
+function PassLoot:AddLastRoll(RollMethod, itemObj, RuleID)
+	-- Add to LastRolls
+	local TextLine, Method
+	if (RollMethod) then
+		Method = RollMethodLookup[RollMethod]
+	else
+		Method = L["Ignored"]
+	end
+	TextLine = string.format("|T%s:0|t %s - %s -> %s", itemObj.texture, itemObj.link, Method, PassLoot.db.profile.Rules[RuleID].Desc)
+	if (#self.LastRolls == 10) then
+		table.remove(self.LastRolls, 1)
+	end
+	table.insert(self.LastRolls, TextLine)
+end
+
 -- Texture, Name, Count, Quality, BindOnPickup, CanNeed, CanGreed, CanDisenchant = GetLootRollItemInfo(rollID)
 -- RollOnLoot(RollID, #)  0 = pass, 1 = need, 2 = greed, 3 = de
 function PassLoot:START_LOOT_ROLL(Event, RollID, ...)
@@ -541,7 +556,7 @@ function PassLoot:START_LOOT_ROLL(Event, RollID, ...)
 	-- Might need to remove the CanDisenchant lines here if Blizz doesn't care if a DE'er is present or not?
 	if (self.TestLink) then
 		RollID = -1
-		ItemLink = self.TestLink
+		ItemLink = self.TestLink.link
 		CanRoll.need, CanRoll.greed, CanRoll.de = self.TestCanNeed, self.TestCanGreed, self.TestCanDisenchant
 	else
 		ItemLink = GetLootRollItemLink(RollID)
@@ -557,20 +572,22 @@ function PassLoot:START_LOOT_ROLL(Event, RollID, ...)
 	else
 		itemObj = PassLoot:InitItem(ItemLink)
 	end
-
-	local RollMethod = PassLoot:GetItemEvaluation(itemObj, RollID)
-	if RollMethod then
-		AceTimer:ScheduleTimer("delay_rollOnLoot", 1, RollID, RollMethod[1])
+	local RollMethod, RuleID = PassLoot:GetItemEvaluation(itemObj, RollID)
+	if RollMethod ~= nil then
+		PassLoot:AddLastRoll(RollMethod, itemObj, RuleID)
+	end
+	if not self.TestLink and RollMethod and RollMethod ~= nil and RollID > -1 then
+		AceTimer:ScheduleTimer("delay_rollOnLoot", 0.1, RollID, RollMethod)
 	end
 end
 
 function PassLoot:EvaluateItem(itemObj, RollID)
 	if not itemObj or not itemObj.link then return end
 	local Name = itemObj.name
-	self.Tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-	self.Tooltip:SetHyperlink(ItemLink)
+	PastLootTT:ClearLines()
+	PastLootTT:SetHyperlink(itemObj.link)
 	for WidgetKey, WidgetValue in ipairs(self.RuleWidgets) do
-		WidgetValue:SetMatch(ItemLink, PassLootTT, RollID)
+		WidgetValue:SetMatch(itemObj, PassLootTT, RollID or -1)
 	end
 	local MatchedRule, NumFilters
 	local IsMatch, IsException, NormalMatch, ExceptionMatch, HadNoNormal
@@ -579,11 +596,11 @@ function PassLoot:EvaluateItem(itemObj, RollID)
 		self:Debug("Checking rule " .. RuleKey .. " " .. RuleValue.Desc)
 		if (self.db.profile.SkipRules and self.SkipRules[RuleKey]) then
 			if (self.db.profile.SkipWarning) then
-				self:Pour("|cff33ff99" .. L["PassLoot"] .. "|r: " .. string.gsub(L["Skipping %rule%"], "%%rule%%", RuleValue.Desc))
+				self:Pour("|cff33ff99" ..
+					L["PastLoot"] .. "|r: " .. string.gsub(L["Skipping %rule%"], "%%rule%%", RuleValue.Desc))
 			end
 		else
 			MatchedRule = true
-
 			for WidgetKey, WidgetValue in ipairs(self.RuleWidgets) do
 				NumFilters = WidgetValue:GetNumFilters(RuleKey) or 0
 				if (NumFilters > 0) then
@@ -653,34 +670,21 @@ function PassLoot:EvaluateItem(itemObj, RollID)
 				-- break
 				-- end
 				-- end
-				self:SendMessage("PassLoot_OnRoll", ItemLink, RuleKey, RollID, RollMethod) -- Maybe change this to OnRuleMatched
+				self:SendMessage("PassLoot_OnRoll", itemObj.link, RuleKey, RollID, RollMethod) -- Maybe change this to OnRuleMatched
 				if (not self.TestLink) then
 					if (RollMethod) then
 						-- RollOnLoot(RollID, RollMethod)
 						return RollMethod, RuleKey
 					end
 				end
-				-- Add to LastRolls
-				local ItemTexture, TextLine, Method
-				if (RollMethod) then
-					Method = RollMethodLookup[RollMethod]
-				else
-					Method = L["Ignored"]
-				end
-				_, _, _, _, _, _, _, _, _, ItemTexture, _ = GetItemInfo(ItemLink)
-				TextLine = string.format("|T%s:0|t %s - %s", ItemTexture, ItemLink, Method)
-				if (#self.LastRolls == 10) then
-					table.remove(self.LastRolls, 1)
-				end
-				table.insert(self.LastRolls, TextLine)
 				-- Send StatusMsg
 				if (self.db.profile.Quiet == false) then
 					-- Workaround for LibSink.  It can handle |c and |r color stuff, but not full ItemLinks
 					local ItemText
 					if (self.db.profile.SinkOptions.sink20OutputSink == "Channel") then
-						ItemText = GetItemInfo(ItemLink)
+						ItemText = itemObj.name
 					else
-						ItemText = ItemLink
+						ItemText = itemObj.link
 					end
 					StatusMsg = string.gsub(StatusMsg, "%%item%%", ItemText)
 					StatusMsg = string.gsub(StatusMsg, "%%rule%%", RuleValue.Desc)
@@ -695,7 +699,7 @@ function PassLoot:EvaluateItem(itemObj, RollID)
 	end --RuleKey, RuleValue
 	self:Debug("Ran out of rules, ignoring")
 	if (self.TestLink) then
-		self:Pour(L["No rules matched."])
+		self:Pour(itemObj.link .. ": " .. L["No rules matched."])
 	end
 	self.TestLink, CanRoll.greed, CanRoll.need, CanRoll.de = nil, nil, nil, nil
 end
