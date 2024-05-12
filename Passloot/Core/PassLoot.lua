@@ -1,10 +1,18 @@
 local VERSION = "1.0"
-PassLoot = LibStub("AceAddon-3.0"):NewAddon("PassLoot", "AceConsole-3.0", "AceEvent-3.0", "AceBucket-3.0", "LibSink-2.0")
+PassLoot = LibStub("AceAddon-3.0"):NewAddon("PassLoot", "AceConsole-3.0", "AceEvent-3.0", "AceBucket-3.0", "LibSink-2.0",
+	"AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot")
 local LDB = LibStub:GetLibrary("LibDataBroker-1.1")
--- local LDBIcon = LibStub("LibDBIcon-1.0")
-local AceTimer = LibStub('AceTimer-3.0')
-function AceTimer:delay_rollOnLoot(RollID, RollMethod) RollOnLoot(RollID, RollMethod) end
+
+local rollQueue = {}
+function PassLoot:delay_rollOnLoot()
+	local nextRoll = table.remove(rollQueue, 1)
+	RollOnLoot(nextRoll.RollID, nextRoll.RollMethod)
+	if rawequal(next(rollQueue), nil) then
+		PassLoot:CancelTimer(PassLoot.delay_rollOnLoot_active)
+		PassLoot.delay_rollOnLoot_active = nil
+	end
+end
 
 local defaults = {
 	["profile"] = {
@@ -542,7 +550,8 @@ function PassLoot:AddLastRoll(RollMethod, itemObj, RuleID)
 	else
 		Method = L["Ignored"]
 	end
-	TextLine = string.format("|T%s:0|t %s - %s -> %s", itemObj.texture, itemObj.link, Method, PassLoot.db.profile.Rules[RuleID].Desc)
+	TextLine = string.format("|T%s:0|t %s - %s -> %s", itemObj.texture, itemObj.link, Method,
+		PassLoot.db.profile.Rules[RuleID].Desc)
 	if (#self.LastRolls == 10) then
 		table.remove(self.LastRolls, 1)
 	end
@@ -577,7 +586,10 @@ function PassLoot:START_LOOT_ROLL(Event, RollID, ...)
 		PassLoot:AddLastRoll(RollMethod, itemObj, RuleID)
 	end
 	if not self.TestLink and RollMethod and RollMethod ~= nil and RollID > -1 then
-		AceTimer:ScheduleTimer("delay_rollOnLoot", 0.1, RollID, RollMethod)
+		table.insert(rollQueue, { ["RollID"] = RollID, ["RollMethod"] = RollMethod })
+		if not PassLoot.delay_rollOnLoot_active then
+			PassLoot.delay_rollOnLoot_active = PassLoot:ScheduleRepeatingTimer("delay_rollOnLoot", 0.5)
+		end
 	end
 end
 
