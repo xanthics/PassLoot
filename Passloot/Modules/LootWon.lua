@@ -1,6 +1,19 @@
 local PassLoot = LibStub("AceAddon-3.0"):GetAddon("PassLoot")
-local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot_Modules")
-local module = PassLoot:NewModule(L["Loot Won"], "AceEvent-3.0")
+local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot")
+
+--[[
+Checklist if creating a new module
+- first choose an existing module that most closely matches what you want to do
+- modify module_key, module_name, module_tooltip to unique values
+- make sure to update locales
+- Modify SetMatch and GetMatch
+- Create/Modify local functions as needed
+]]
+local module_key = "LootWonCounter"
+local module_name = L["Loot Won"]
+local module_tooltip = L["Loot Won Counter_Desc"]
+
+local module = PassLoot:NewModule(module_name, "AceEvent-3.0")
 
 module.Choices = {
 	{
@@ -39,7 +52,7 @@ module.ConfigOptions_RuleDefaults = {
 		-- [1] = { Operator, Comparison, Exception }
 		-- },
 	},
-	{ "LootWonCounter",         nil },
+	{ module_key,               nil },
 }
 module.NewFilterValue_LogicalOperator = 1
 module.NewFilterValue_Comparison = 0
@@ -104,7 +117,7 @@ function module:CHAT_MSG_LOOT(Event, ...)
 					if (Counter) then
 						Counter = Counter + 1
 						self:Debug("Incrementing Counter to " .. Counter)
-						self:SetConfigOption("LootWonCounter", Counter, Value[2])
+						self:SetConfigOption(module_key, Counter, Value[2])
 					end
 					-- self:CurrentText()
 					PassLoot:DisplayCurrentOptionFilter()
@@ -153,7 +166,7 @@ function module:ResetProfileLootWonCounters()
 		Counter = self.WidgetCounter:GetData(Key)
 		if (Counter) then
 			Counter = 0
-			self:SetConfigOption("LootWonCounter", Counter, Key)
+			self:SetConfigOption(module_key, Counter, Key)
 		end
 	end
 	self.WidgetCounter:DisplayWidget()
@@ -161,6 +174,7 @@ function module:ResetProfileLootWonCounters()
 end
 
 function module:CreateWidget_LootWonCounter()
+
 	local EditBox = CreateFrame("EditBox", "PassLoot_Frames_Widgets_LootWonCounter")
 	EditBox:SetBackdrop({
 		["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
@@ -183,7 +197,7 @@ function module:CreateWidget_LootWonCounter()
 	EditBox:SetMaxLetters(8)
 	-- EditBox:SetHistoryLines(0)
 	EditBox:SetAutoFocus(false)
-	EditBox:SetScript("OnEnter", function() self:ShowTooltip(L["Loot Won Counter"], L["Loot Won Counter_Desc"]) end)
+	EditBox:SetScript("OnEnter", function() self:ShowTooltip(module_name, module_tooltip) end)
 	EditBox:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	EditBox:SetScript("OnEscapePressed", function(Frame) Frame:ClearFocus() end)
 	EditBox:SetScript("OnEditFocusGained", function(Frame) Frame:HighlightText() end)
@@ -198,7 +212,7 @@ function module:CreateWidget_LootWonCounter()
 	local EditBoxTitle = EditBox:CreateFontString(EditBox:GetName() .. "Title", "BACKGROUND", "GameFontNormalSmall")
 	EditBoxTitle:SetParent(EditBox)
 	EditBoxTitle:SetPoint("BOTTOMLEFT", EditBox, "TOPLEFT", 3, 0)
-	EditBoxTitle:SetText(L["Loot Won Counter"])
+	EditBoxTitle:SetText(module_name)
 	EditBox:SetParent(nil)
 	EditBox:Hide()
 	EditBox.YPaddingTop = EditBoxTitle:GetHeight() + 1
@@ -206,8 +220,8 @@ function module:CreateWidget_LootWonCounter()
 	EditBox.Height = EditBox:GetHeight() + EditBox.YPaddingTop + EditBox.YPaddingBottom
 	EditBox.PreferredPriority = 17
 	EditBox.Info = {
-		L["Loot Won Counter"],
-		L["Loot Won Counter_Desc"],
+		module_name,
+		module_tooltip,
 	}
 	return EditBox
 end
@@ -216,12 +230,7 @@ module.WidgetCounter = module:CreateWidget_LootWonCounter()
 
 -- Local function to get the data and make sure it's valid data
 function module.WidgetCounter:GetData(RuleNum)
-	local Data = module:GetConfigOption("LootWonCounter", RuleNum)
-	if (Data and not tonumber(Data)) then
-		Data = module.NewFilterValue_Counter
-		module:SetConfigOption("LootWonCounter", Data)
-	end
-	return Data
+	return module:GetConfigOption(module_key, RuleNum)
 end
 
 function module.WidgetCounter:GetNumFilters(RuleNum)
@@ -234,11 +243,11 @@ function module.WidgetCounter:GetNumFilters(RuleNum)
 end
 
 function module.WidgetCounter:AddNewFilter()
-	module:SetConfigOption("LootWonCounter", module.NewFilterValue_Counter)
+	module:SetConfigOption(module_key, module.NewFilterValue_Counter)
 end
 
 function module.WidgetCounter:RemoveFilter(Index)
-	module:SetConfigOption("LootWonCounter", nil)
+	module:SetConfigOption(module_key, nil)
 	module:SetConfigOption("LootWonComparison", nil)
 end
 
@@ -277,7 +286,7 @@ function module:SetCounter(Frame)
 		Value = 0
 	end
 	Value = math.floor(Value + 0.5)
-	self:SetConfigOption("LootWonCounter", Value)
+	self:SetConfigOption(module_key, Value)
 end
 
 function module:CreateWidget_LootWonComparison()
@@ -354,32 +363,7 @@ module.WidgetComparison, module.DropDownEditBox = module:CreateWidget_LootWonCom
 
 -- Local function to get the data and make sure it's valid data
 function module.WidgetComparison:GetData(RuleNum)
-	local Data = module:GetConfigOption("LootWonComparison", RuleNum)
-	local Changed = false
-	if (Data) then
-		if (type(Data) == "table" and #Data > 0) then
-			for Key, Value in ipairs(Data) do
-				if (type(Value) ~= "table" or type(Value[1]) ~= "number" or type(Value[2]) ~= "number") then
-					Data[Key] = {
-						module.NewFilterValue_LogicalOperator,
-						module.NewFilterValue_Comparison,
-						false
-					}
-					Changed = true
-				end
-			end
-		else
-			Data = nil
-			Changed = true
-		end
-	end
-	if (Changed) then
-		module:SetConfigOption("LootWonComparison", Data)
-	end
-	if (Data and #Data > 0 and not module.WidgetCounter:GetData()) then
-		module:SetConfigOption("LootWonCounter", module.NewFilterValue_Counter)
-	end
-	return Data or {}
+	return module:GetConfigOption("LootWonComparison", RuleNum) or {}
 end
 
 function module.WidgetComparison:GetNumFilters(RuleNum)
@@ -398,7 +382,7 @@ function module.WidgetComparison:AddNewFilter()
 	module:SetConfigOption("LootWonComparison", Value)
 	Value = module.WidgetCounter:GetData()
 	if (not Value) then
-		module:SetConfigOption("LootWonCounter", module.NewFilterValue_Counter)
+		module:SetConfigOption(module_key, module.NewFilterValue_Counter)
 	end
 end
 
@@ -440,7 +424,7 @@ function module.WidgetComparison:SetException(RuleNum, Index, Value)
 	module:SetConfigOption("LootWonComparison", Data)
 end
 
-function module.WidgetComparison:SetMatch(ItemLink, Tooltip)
+function module.WidgetComparison:SetMatch(itemObj, Tooltip)
 end
 
 function module.WidgetComparison:GetMatch(RuleNum, Index)

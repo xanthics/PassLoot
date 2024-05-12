@@ -1,6 +1,19 @@
 local PassLoot = LibStub("AceAddon-3.0"):GetAddon("PassLoot")
-local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot_Modules")
-local module = PassLoot:NewModule(L["Group / Raid"])
+local L = LibStub("AceLocale-3.0"):GetLocale("PassLoot")
+
+--[[
+Checklist if creating a new module
+- first choose an existing module that most closely matches what you want to do
+- modify module_key, module_name, module_tooltip to unique values
+- make sure to update locales
+- Modify SetMatch and GetMatch
+- Create/Modify local functions as needed
+]]
+local module_key = "GroupRaid"
+local module_name = L["Group / Raid"]
+local module_tooltip = L["Selected rule will only match if you are in a group or raid."]
+
+local module = PassLoot:NewModule(module_name)
 
 module.Choices = {
 	L["Any"],
@@ -10,7 +23,7 @@ module.Choices = {
 module.ConfigOptions_RuleDefaults = {
 	-- { VariableName, Default },
 	{
-		"GroupRaid",
+		module_key,
 		-- {
 		-- [1] = { Value, Exception }
 		-- }
@@ -29,61 +42,15 @@ function module:OnDisable()
 end
 
 function module:CreateWidget()
-	local Widget = CreateFrame("Frame", "PassLoot_Frames_Widgets_GroupRaid", nil, "UIDropDownMenuTemplate")
-	Widget:EnableMouse(true)
-	Widget:SetHitRectInsets(15, 15, 0, 0)
-	_G[Widget:GetName() .. "Text"]:SetJustifyH("CENTER")
-	UIDropDownMenu_SetWidth(Widget, 100)
-	Widget:SetScript("OnEnter",
-		function() self:ShowTooltip(L["Group / Raid"], L["Selected rule will only match if you are in a group or raid."]) end)
-	Widget:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	local Button = _G[Widget:GetName() .. "Button"]
-	Button:SetScript("OnEnter",
-		function() self:ShowTooltip(L["Group / Raid"], L["Selected rule will only match if you are in a group or raid."]) end)
-	Button:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	local Title = Widget:CreateFontString(Widget:GetName() .. "Title", "BACKGROUND", "GameFontNormalSmall")
-	Title:SetParent(Widget)
-	Title:SetPoint("BOTTOMLEFT", Widget, "TOPLEFT", 20, 0)
-	Title:SetText(L["Group / Raid"])
-	Widget:SetParent(nil)
-	Widget:Hide()
-	Widget.initialize = function(...) self:DropDown_Init(...) end
-	Widget.YPaddingTop = Title:GetHeight()
-	Widget.Height = Widget:GetHeight() + Widget.YPaddingTop
-	Widget.XPaddingLeft = -15
-	Widget.XPaddingRight = -15
-	Widget.Width = Widget:GetWidth() + Widget.XPaddingLeft + Widget.XPaddingRight
-	Widget.PreferredPriority = 13
-	Widget.Info = {
-		L["Group / Raid"],
-		L["Selected rule will only match if you are in a group or raid."],
-	}
-	return Widget
+	local frame_name = "PassLoot_Frames_Widgets_GroupRaid"
+	return PassLoot:CreateSimpleDropdown(self, module_name, frame_name, module_tooltip)
 end
 
 module.Widget = module:CreateWidget()
 
 -- Local function to get the data and make sure it's valid data
 function module.Widget:GetData(RuleNum)
-	local Data = module:GetConfigOption("GroupRaid", RuleNum)
-	local Changed = false
-	if (Data) then
-		if (type(Data) == "table" and #Data > 0) then
-			for Key, Value in ipairs(Data) do
-				if (type(Value) ~= "table" or type(Value[1]) ~= "number") then
-					Data[Key] = { module.NewFilterValue, false }
-					Changed = true
-				end
-			end
-		else
-			Data = nil
-			Changed = true
-		end
-	end
-	if (Changed) then
-		module:SetConfigOption("GroupRaid", Data)
-	end
-	return Data or {}
+	return module:GetConfigOption(module_key, RuleNum) or {}
 end
 
 function module.Widget:GetNumFilters(RuleNum)
@@ -94,7 +61,7 @@ end
 function module.Widget:AddNewFilter()
 	local Value = self:GetData()
 	table.insert(Value, { module.NewFilterValue, false })
-	module:SetConfigOption("GroupRaid", Value)
+	module:SetConfigOption(module_key, Value)
 end
 
 function module.Widget:RemoveFilter(Index)
@@ -103,7 +70,7 @@ function module.Widget:RemoveFilter(Index)
 	if (#Value == 0) then
 		Value = nil
 	end
-	module:SetConfigOption("GroupRaid", Value)
+	module:SetConfigOption(module_key, Value)
 end
 
 function module.Widget:DisplayWidget(Index)
@@ -127,10 +94,10 @@ end
 function module.Widget:SetException(RuleNum, Index, Value)
 	local Data = self:GetData(RuleNum)
 	Data[Index][2] = Value
-	module:SetConfigOption("GroupRaid", Data)
+	module:SetConfigOption(module_key, Data)
 end
 
-function module.Widget:SetMatch(ItemLink, Tooltip)
+function module.Widget:SetMatch(itemObj, Tooltip)
 	module.CurrentMatch = 1 -- module.Choices[1] = "Any"
 	if (UnitInRaid("player")) then
 		module.CurrentMatch = 3 -- module.Choices[3] = "Raid"
@@ -168,6 +135,6 @@ end
 function module:DropDown_OnClick(Frame)
 	local Value = self.Widget:GetData()
 	Value[self.FilterIndex][1] = Frame.value
-	self:SetConfigOption("GroupRaid", Value)
+	self:SetConfigOption(module_key, Value)
 	UIDropDownMenu_SetText(Frame.owner, Frame:GetText())
 end
