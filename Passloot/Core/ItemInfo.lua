@@ -15,21 +15,6 @@ local function fillItemInfo(item)
 	return item
 end
 
-function PassLoot:FillContainerItemInfo(item,bag,slot)
-	local _, count, locked, _, readable, lootable, link = GetContainerItemInfo(bag, slot)
-	if item == nil and link ~= nil then item = self:InitItem(link) else return end
-
-	item.bag = bag
-	item.slot = slot
-	item.count = count
-	item.locked = locked
-	item.readable = readable
-	item.lootable = lootable
-	item.guid = GetContainerItemGUID(bag, slot)
-	item.stackValue = count * (item.vendorPrice or 1)
-	return item
-end
-
 function PassLoot:InitItem(link)
 	if not link then return end
 

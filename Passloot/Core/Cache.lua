@@ -52,20 +52,20 @@ end
 
 function PassLoot:GetItemEvaluation(item)
 	initCache()
-	if not item or not item.guid then return end
+	if not item or not item.link then return end
 	local cache = PassLoot.EvalCache
-	if not (cache[item.guid] and cache[item.guid]["expiresAt"] >= GetTime()) then
+	if not (cache[item.link] and cache[item.link]["expiresAt"] >= GetTime()) then
 		if PassLoot:ValidateItemObj(item) then
 			local r, m = PassLoot:EvaluateItem(item)
-			cache[item.guid] = { ["itemObj"] = item, ["result"] = r, ["match"] = m, ["expiresAt"] = GetTime() +
+			cache[item.link] = { ["itemObj"] = item, ["result"] = r, ["match"] = m, ["expiresAt"] = GetTime() +
 			self.db.profile.CacheExpires }
 		else
-			cache[item.guid] = { ["itemObj"] = item, ["result"] = 1, ["match"] = -1, ["expiresAt"] = GetTime() + 5 }
+			cache[item.link] = { ["itemObj"] = item, ["result"] = 1, ["match"] = -1, ["expiresAt"] = GetTime() + 5 }
 		end
 	end
-	return { cache[item.guid]["result"], cache[item.guid]["match"] }
+	return { cache[item.link]["result"], cache[item.link]["match"] }
 end
 
 function PassLoot:ValidateItemObj(itemObj)
-	return itemObj.name and itemObj.count and itemObj.id and itemObj.guid
+	return itemObj.name and itemObj.count and itemObj.id and itemObj.link
 end

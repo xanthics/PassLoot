@@ -109,7 +109,7 @@ end
 function module.Widget:SetMatch(itemObj, Tooltip)
 	local Line, Text, Red, Green, Blue, Alpha
 	local Usable = 2 -- Choices 2 is usable
-	PassLoot.BuildTooltipCache(itemObj)
+	PassLoot:BuildTooltipCache(itemObj)
 	local cache = PassLoot.TooltipCache
 
 	-- Found on line 3 of most items
