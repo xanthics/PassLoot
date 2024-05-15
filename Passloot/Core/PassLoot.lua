@@ -596,8 +596,8 @@ end
 function PassLoot:EvaluateItem(itemObj, RollID)
 	if not itemObj or not itemObj.link then return end
 	local Name = itemObj.name
-	PastLootTT:ClearLines()
-	PastLootTT:SetHyperlink(itemObj.link)
+	PassLootTT:ClearLines()
+	PassLootTT:SetHyperlink(itemObj.link)
 	for WidgetKey, WidgetValue in ipairs(self.RuleWidgets) do
 		WidgetValue:SetMatch(itemObj, PassLootTT, RollID or -1)
 	end
@@ -609,7 +609,7 @@ function PassLoot:EvaluateItem(itemObj, RollID)
 		if (self.db.profile.SkipRules and self.SkipRules[RuleKey]) then
 			if (self.db.profile.SkipWarning) then
 				self:Pour("|cff33ff99" ..
-					L["PastLoot"] .. "|r: " .. string.gsub(L["Skipping %rule%"], "%%rule%%", RuleValue.Desc))
+					L["PassLoot"] .. "|r: " .. string.gsub(L["Skipping %rule%"], "%%rule%%", RuleValue.Desc))
 			end
 		else
 			MatchedRule = true
