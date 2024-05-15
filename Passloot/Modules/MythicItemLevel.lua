@@ -64,10 +64,10 @@ function module:OnDisable()
 end
 
 function module:CreateWidget()
-	local frame_name = "PassLoot_Frames_Widgets_RequiredLevelComparison"
+	local frame_name = "PassLoot_Frames_Widgets_MythicItemLevelComparison"
 	local DropDown = PassLoot:CreateSimpleDropdown(self, module_name, frame_name, module_tooltip)
 
-	local dropdownframe_name = "PassLoot_Frames_Widgets_RequiredLevelDropDownEditBox"
+	local dropdownframe_name = "PassLoot_Frames_Widgets_MythicItemLevelDropDownEditBox"
 	local DropDownEditBox = PassLoot:CreateDropDownEditBox(self, dropdownframe_name)
 	return DropDown, DropDownEditBox
 end
