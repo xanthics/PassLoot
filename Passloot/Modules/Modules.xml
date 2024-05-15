@@ -5,6 +5,7 @@
 	<Script file="ConfirmBoP.lua"/>
 	<Script file="ConfirmDE.lua"/>
 	<Script file="Equipslot.lua"/>
+	<Script file="ExceptionalItem.lua"/>
 	<Script file="GroupRaid.lua"/>
 	<Script file="GuildGroup.lua"/>
 	<Script file="Inventory.lua"/>
