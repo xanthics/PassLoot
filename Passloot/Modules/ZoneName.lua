@@ -38,7 +38,9 @@ end
 
 function module:CreateWidget()
 	local frame_name = "PassLoot_Frames_Widgets_Zone"
-	return PassLoot:CreateTextBoxOptionalCheckBox(self, module_name, frame_name, module_tooltip)
+	local Widget = PassLoot:CreateTextBoxOptionalCheckBox(self, module_name, frame_name, module_tooltip)
+	Widget:SetScript("OnMouseUp", function(...) self:SetItemName(...) end)
+	return Widget
 end
 
 module.Widget = module:CreateWidget()
@@ -76,8 +78,8 @@ function module.Widget:DisplayWidget(Index)
 	if (not Value or not Value[module.FilterIndex]) then
 		return
 	end
-	module.Widget:SetText(Value[module.FilterIndex][1])
-	module.Widget:SetScript("OnUpdate", function(...) module:ScrollLeft(...) end)
+	module.Widget.TextBox:SetText(Value[module.FilterIndex][1])
+	module.Widget.TextBox:SetScript("OnUpdate", function(...) module:ScrollLeft(...) end)
 end
 
 function module.Widget:GetFilterText(Index)
@@ -112,7 +114,7 @@ function module.Widget:GetMatch(RuleNum, Index)
 	return true
 end
 
-function module:SetRuleZone(Frame, Button)
+function module:SetItemName(Frame, Button)
 	local Value = self.Widget:GetData()
 	if (Button) then
 		if (Button == "RightButton" and IsShiftKeyDown() and GetRealZoneText()) then
