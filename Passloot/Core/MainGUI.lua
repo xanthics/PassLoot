@@ -309,7 +309,7 @@ function PassLoot:Rules_RuleList_OnScroll()
 	for Line = 1, self.NumRuleListLines do
 		LineNum = Line + FauxScrollFrame_GetOffset(Frame.ScrollFrame)
 		if (LineNum <= NumRules) then
-			Frame["ScrollLine" .. Line].Text:SetText(self.db.profile.Rules[LineNum].Desc)
+			Frame["ScrollLine" .. Line].Text:SetText(LineNum .. ") " .. self.db.profile.Rules[LineNum].Desc)
 			Frame["ScrollLine" .. Line].Pass:SetChecked(false)
 			Frame["ScrollLine" .. Line].Greed:SetChecked(false)
 			Frame["ScrollLine" .. Line].Need:SetChecked(false)
