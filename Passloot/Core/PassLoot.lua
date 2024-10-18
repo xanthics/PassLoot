@@ -150,6 +150,10 @@ PassLoot.OptionsTable = {
 			["get"] = function() end,
 			["set"] = function(info, value)
 				local _, link = GetItemInfo(value)
+				if not link then
+					_, link = GameTooltip:GetItem()
+				end
+
 				if PassLoot.EvalCache[link] then
 					PassLoot.TestLink = PassLoot.EvalCache[link]["itemObj"]
 				else
