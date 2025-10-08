@@ -176,6 +176,7 @@ L["Bloodforged"] = true
 L["Heroic"] = true
 L["Mythic"] = true
 L["Ascended"] = true
+L["Worldforged"] = true
 L["Quality"] = true
 L["Raid"] = true
 L["Required Level"] = true
